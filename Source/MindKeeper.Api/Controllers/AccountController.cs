@@ -16,10 +16,10 @@ namespace MindKeeper.Api.Controllers
 
         public AccountController(
             ILogger<AccountController> logger,
-            IUserService accountService)
+            IUserService userService)
         {
             _logger = logger;
-            _userService = accountService;
+            _userService = userService;
         }
 
         [HttpPost("[action]")]
@@ -28,6 +28,21 @@ namespace MindKeeper.Api.Controllers
             var result = await _userService.CreateUser(request.Mail, request.Password);
 
             return (OperationResult)result;
+        }
+
+        [HttpPost("[action]")]
+        public async Task<OperationResult<TokenResponse>> Token([FromBody] TokenRequest request)
+        {
+            var result = await _userService.CreateToken(request.Username, request.Password);
+            if (!result.IsOk)
+                return OperationResult<TokenResponse>.Error(result.ErrorMessage);
+
+            var response = new TokenResponse
+            {
+                AccessToken = result.Data
+            };
+
+            return OperationResult<TokenResponse>.Ok(response);
         }
     }
 }

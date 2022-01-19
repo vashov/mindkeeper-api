@@ -64,5 +64,10 @@
                 ErrorMessage = errorMessage
             };
         }
+
+        public OperationResult<T> AsError<T>()
+        {
+            return OperationResult<T>.Error(this.ErrorMessage ?? "Unknown error.");
+        }
     }
 }
