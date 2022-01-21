@@ -7,7 +7,7 @@ namespace MindKeeper.Api.Services.Users
     {
         public Task<OperationResult<long>> CreateUser(string mail, string password);
 
-        public Task<OperationResult<string>> CreateToken(string mail, string password);
+        public Task<OperationResult<string>> CreateAccessToken(string mail, string password);
 
         public Task<OperationResult<string>> RefreshToken(string refreshToken);
     }

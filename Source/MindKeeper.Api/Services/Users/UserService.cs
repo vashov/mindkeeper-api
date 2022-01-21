@@ -22,7 +22,7 @@ namespace MindKeeper.Api.Services.Users
             throw new NotImplementedException();
         }
 
-        public async Task<OperationResult<string>> CreateToken(string mail, string password)
+        public async Task<OperationResult<string>> CreateAccessToken(string mail, string password)
         {
             var findUserResult = await FindUser(mail, password);
             if (!findUserResult.IsOk)

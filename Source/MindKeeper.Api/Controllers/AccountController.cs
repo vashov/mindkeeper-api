@@ -33,7 +33,7 @@ namespace MindKeeper.Api.Controllers
         [HttpPost("[action]")]
         public async Task<OperationResult<TokenResponse>> Token([FromBody] TokenRequest request)
         {
-            var result = await _userService.CreateToken(request.Username, request.Password);
+            var result = await _userService.CreateAccessToken(request.Username, request.Password);
             if (!result.IsOk)
                 return OperationResult<TokenResponse>.Error(result.ErrorMessage);
 
