@@ -15,7 +15,7 @@ namespace MindKeeper.Api.Core.Auth
             return Convert.ToBase64String(combinedHash);
         }
 
-        public bool IsPasswordsEquals(string enteredPassword, string savedPasswordHash)
+        public bool ArePasswordsEqual(string enteredPassword, string savedPasswordHash)
         {
             byte[] hashBytes = Convert.FromBase64String(savedPasswordHash);
 
