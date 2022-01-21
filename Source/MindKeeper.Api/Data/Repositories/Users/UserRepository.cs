@@ -1,7 +1,8 @@
-﻿using MindKeeper.Api.Data.Repositories.Users.Models;
-using System;
+﻿using Dapper;
+using MindKeeper.Api.Data.Repositories.Users.Models;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MindKeeper.Api.Data.Repositories.Users
@@ -15,24 +16,45 @@ namespace MindKeeper.Api.Data.Repositories.Users
             _connection = connection;
         }
 
-        public Task<long> Create(string mail, string passwordHash)
+        public async Task<User> Create(string mail, string passwordHash)
         {
-            throw new NotImplementedException();
+            string normilizedMail = mail.ToUpper();
+
+            const string createCommand = @"
+                INSERT INTO users (mail, normalized_mail, password_hash)
+                VALUES (@mail, @normalizedMail, @passwordHash)
+                RETURNING *;
+            ";
+            var user = await _connection.QuerySingleOrDefaultAsync<User>(createCommand,
+                new { mail, normilizedMail, passwordHash});
+
+            return user;
         }
 
-        public Task<User> Get(long id)
+        public async Task<User> Get(long id)
         {
-            throw new NotImplementedException();
+            const string query = "SELECT * FROM users WHERE id = @id;";
+
+            var user = await _connection.QuerySingleOrDefaultAsync<User>(query, new { id });
+            return user;
         }
 
-        public Task<User> Get(string mail)
+        public async Task<User> Get(string mail)
         {
-            throw new NotImplementedException();
+            string normilizedMail = mail.ToUpper();
+
+            const string query = "SELECT * FROM users WHERE normalized_mail = @normalizedMail;";
+
+            var user = await _connection.QuerySingleOrDefaultAsync<User>(query, new { normilizedMail });
+            return user;
         }
 
-        public Task<List<User>> GetAll()
+        public async Task<List<User>> GetAll()
         {
-            throw new NotImplementedException();
+            const string query = "SELECT * FROM users;";
+
+            var users = await _connection.QueryAsync<User>(query);
+            return users.ToList();
         }
     }
 }

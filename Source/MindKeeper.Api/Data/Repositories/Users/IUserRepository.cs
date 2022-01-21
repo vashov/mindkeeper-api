@@ -9,6 +9,6 @@ namespace MindKeeper.Api.Data.Repositories.Users
         public Task<User> Get(long id);
         public Task<User> Get(string mail);
         public Task<List<User>> GetAll();
-        public Task<long> Create(string mail, string passwordHash);
+        public Task<User> Create(string mail, string passwordHash);
     }
 }
