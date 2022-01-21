@@ -11,8 +11,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MindKeeper.Api.Core;
 using MindKeeper.Api.Core.Auth;
+using MindKeeper.Api.Data.Migrations;
+using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,6 +23,9 @@ namespace MindKeeper.Api
 {
     public class Startup
     {
+        private readonly string _dbConnectionString = Environment.GetEnvironmentVariable("DefaultConnection")
+            ?? throw new NotImplementedException("Setup connection string.");
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,7 +35,12 @@ namespace MindKeeper.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IDbConnection>((sp) => new NpgsqlConnection(_dbConnectionString));
+
+            services.AddRepositories();
             services.AddBusinessLogicServices();
+
+            services.AddTransient<DbMigration>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -57,8 +68,10 @@ namespace MindKeeper.Api
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider services)
         {
+            InitDatabase(services);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -77,6 +90,12 @@ namespace MindKeeper.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private static void InitDatabase(IServiceProvider services)
+        {
+            var dbMigration = (DbMigration)services.GetService(typeof(DbMigration));
+            dbMigration.InitDatabase().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MindKeeper.Api.Services.Users.Models
+namespace MindKeeper.Api.Data.Repositories.Users.Models
 {
     public class User
     {

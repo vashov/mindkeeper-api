@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MindKeeper.Api.Core.Auth;
-using MindKeeper.Api.Services.Users.Models;
+using MindKeeper.Api.Data.Repositories.Users.Models;
 using MindKeeper.Shared;
 using System;
 using System.Collections.Generic;
