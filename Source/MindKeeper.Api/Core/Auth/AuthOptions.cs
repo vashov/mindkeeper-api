@@ -10,7 +10,7 @@ namespace MindKeeper.Api.Core.Auth
         
         private const string KEY = "todo_some_secret_key_here!123";
 
-        public const int LIFETIME = 1;
+        public const int LIFETIME = 365 * 24 * 60; // TODO: RefreshToken
         public static SymmetricSecurityKey GetSymmetricSecurityKey()
         {
             return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(KEY));
