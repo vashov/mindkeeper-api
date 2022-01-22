@@ -33,11 +33,8 @@ namespace MindKeeper.Api.Data.Migrations
 
         private static async Task CreateUsers(IDbConnection connection)
         {
-            if (await IsTableExist(connection, "users"))
-                return;
-
             const string createQuery = @"
-                CREATE TABLE users (
+                CREATE TABLE IF NOT EXISTS users (
                     id serial PRIMARY KEY,
                     mail varchar(128) NOT NULL,
                     normalized_mail varchar(128) NOT NULL UNIQUE,
@@ -49,11 +46,8 @@ namespace MindKeeper.Api.Data.Migrations
 
         private static async Task CreateNodes(IDbConnection connection)
         {
-            if (await IsTableExist(connection, "nodes"))
-                return;
-
             const string createQuery = @"
-                CREATE TABLE nodes (
+                CREATE TABLE IF NOT EXISTS nodes (
                     id serial PRIMARY KEY,
 	                name varchar(100),
 	                description varchar(1000),
@@ -64,8 +58,8 @@ namespace MindKeeper.Api.Data.Migrations
 	                CONSTRAINT fk_user_created_by FOREIGN KEY (created_by) REFERENCES users(id),
 	                CONSTRAINT fk_user_updated_by FOREIGN KEY (updated_by) REFERENCES users(id)
                 );
-                CREATE INDEX lower_name_idx ON nodes (lower(name));
-                CREATE INDEX created_at_idx ON nodes (created_at);
+                CREATE INDEX IF NOT EXISTS lower_name_idx ON nodes (lower(name));
+                CREATE INDEX IF NOT EXISTS created_at_idx ON nodes (created_at);
             ";
 
             await connection.ExecuteAsync(createQuery);
@@ -73,11 +67,8 @@ namespace MindKeeper.Api.Data.Migrations
 
         private static async Task CreateNodeNode(IDbConnection connection)
         {
-            if (await IsTableExist(connection, "node_node"))
-                return;
-
             const string createQuery = @"
-                CREATE TABLE node_node (
+                CREATE TABLE IF NOT EXISTS node_node (
                     parent_id int NOT NULL,
                     child_id int NOT NULL,
                     PRIMARY KEY(parent_id, child_id),
