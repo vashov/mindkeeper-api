@@ -1,4 +1,4 @@
-﻿namespace MindKeeper.Shared
+﻿namespace MindKeeper.Shared.Models
 {
     public class OperationResult<T>
     {

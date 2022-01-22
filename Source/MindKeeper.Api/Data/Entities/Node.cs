@@ -13,7 +13,7 @@ namespace MindKeeper.Api.Data.Entities
         public DateTimeOffset CreatedAt { get; set; }
         public int UpdatedBy { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
-        public List<int> Parents { get; set; }
-        public List<int> Children { get; set; }
+        public List<int> Parents { get; } = new List<int>();
+        public List<int> Children { get; } = new List<int>();
     }
 }

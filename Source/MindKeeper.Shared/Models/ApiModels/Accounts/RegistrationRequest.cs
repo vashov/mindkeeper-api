@@ -1,4 +1,4 @@
-﻿namespace MindKeeper.Shared.ApiModels.Accounts
+﻿namespace MindKeeper.Shared.Models.ApiModels.Accounts
 {
     public class RegistrationRequest
     {

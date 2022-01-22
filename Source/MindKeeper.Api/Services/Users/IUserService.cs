@@ -1,5 +1,5 @@
 ﻿using MindKeeper.Api.Data.Repositories.Users.Models;
-using MindKeeper.Shared;
+using MindKeeper.Shared.Models;
 using System.Threading.Tasks;
 
 namespace MindKeeper.Api.Services.Users

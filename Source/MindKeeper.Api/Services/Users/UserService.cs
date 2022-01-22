@@ -2,7 +2,7 @@
 using MindKeeper.Api.Core.Auth;
 using MindKeeper.Api.Data.Repositories.Users;
 using MindKeeper.Api.Data.Repositories.Users.Models;
-using MindKeeper.Shared;
+using MindKeeper.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

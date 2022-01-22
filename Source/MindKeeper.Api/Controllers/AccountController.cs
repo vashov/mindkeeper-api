@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MindKeeper.Api.Services.Users;
-using MindKeeper.Shared;
-using MindKeeper.Shared.ApiModels.Accounts;
+using MindKeeper.Shared.Models;
+using MindKeeper.Shared.Models.ApiModels.Accounts;
 using System.Threading.Tasks;
 
 namespace MindKeeper.Api.Controllers
