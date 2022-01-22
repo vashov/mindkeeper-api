@@ -22,6 +22,7 @@ namespace MindKeeper.Api.Data.Migrations
 
             await CreateUsers(connection);
             await CreateNodes(connection);
+            await CreateNodeNode(connection);
         }
 
         private static async Task<bool> IsTableExist(IDbConnection connection, string tableName)
@@ -65,6 +66,24 @@ namespace MindKeeper.Api.Data.Migrations
                 );
                 CREATE INDEX lower_name_idx ON nodes (lower(name));
                 CREATE INDEX created_at_idx ON nodes (created_at);
+            ";
+
+            await connection.ExecuteAsync(createQuery);
+        }
+
+        private static async Task CreateNodeNode(IDbConnection connection)
+        {
+            if (await IsTableExist(connection, "node_node"))
+                return;
+
+            const string createQuery = @"
+                CREATE TABLE node_node (
+                    parent_id int NOT NULL,
+                    child_id int NOT NULL,
+                    PRIMARY KEY(parent_id, child_id),
+                    CONSTRAINT fk_nodes_parent_id FOREIGN KEY (parent_id) REFERENCES nodes(id),
+                    CONSTRAINT fk_nodes_child_id FOREIGN KEY (child_id) REFERENCES nodes(id)
+                );
             ";
 
             await connection.ExecuteAsync(createQuery);
