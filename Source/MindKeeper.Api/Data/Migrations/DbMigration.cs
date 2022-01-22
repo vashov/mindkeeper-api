@@ -24,7 +24,7 @@ namespace MindKeeper.Api.Data.Migrations
             await CreateNodes(connection);
         }
 
-        private static async Task<bool> IsTableExists(IDbConnection connection, string tableName)
+        private static async Task<bool> IsTableExist(IDbConnection connection, string tableName)
         {
             string checkQuery = $"SELECT EXISTS (SELECT FROM pg_tables WHERE tablename = '{tableName}');";
             return await connection.QuerySingleAsync<bool>(checkQuery);
@@ -32,7 +32,7 @@ namespace MindKeeper.Api.Data.Migrations
 
         private static async Task CreateUsers(IDbConnection connection)
         {
-            if (await IsTableExists(connection, "users"))
+            if (await IsTableExist(connection, "users"))
                 return;
 
             const string createQuery = @"
@@ -48,7 +48,7 @@ namespace MindKeeper.Api.Data.Migrations
 
         private static async Task CreateNodes(IDbConnection connection)
         {
-            if (await IsTableExists(connection, "nodes"))
+            if (await IsTableExist(connection, "nodes"))
                 return;
 
             const string createQuery = @"
