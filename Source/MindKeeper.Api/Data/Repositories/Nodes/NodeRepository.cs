@@ -86,7 +86,7 @@ namespace MindKeeper.Api.Data.Repositories.Nodes
 
             if (!string.IsNullOrWhiteSpace(filter.Name))
             {
-                filter.Name = filter.Name.PrepareForSqlLike(putPercentToEnd: true);
+                filter.Name = filter.Name.PrepareForSqlLike(putPercentToEnd: true).ToLower();
                 builder.Where("n.name ILIKE @Name");
             }
 
