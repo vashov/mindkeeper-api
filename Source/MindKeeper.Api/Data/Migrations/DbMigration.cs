@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using MindKeeper.Api.Data.Constants;
 using System;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MindKeeper.Api.Data.Migrations
@@ -23,6 +25,7 @@ namespace MindKeeper.Api.Data.Migrations
             await CreateUsers(connection);
             await CreateNodes(connection);
             await CreateNodeNode(connection);
+            await CreateNodeTypes(connection);
         }
 
         private static async Task<bool> IsTableExist(IDbConnection connection, string tableName)
@@ -78,6 +81,46 @@ namespace MindKeeper.Api.Data.Migrations
             ";
 
             await connection.ExecuteAsync(createQuery);
+        }
+
+        private static async Task CreateNodeTypes(IDbConnection connection)
+        {
+            if (await IsTableExist(connection, "node_types"))
+                return;
+
+            const string createQuery = @"
+                CREATE TABLE IF NOT EXISTS node_types (
+                    id int PRIMARY KEY,
+                    name varchar(100),
+                    is_editable bool NOT NULL
+                );
+
+                DO $$
+                BEGIN
+                    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_node_types_type_id') THEN
+                        ALTER TABLE nodes
+                            ADD CONSTRAINT fk_node_types_type_id
+                            FOREIGN KEY (type_id) REFERENCES node_types(id);
+                    END IF;
+                END;
+                $$;
+            ";
+
+            await connection.ExecuteAsync(createQuery);
+
+            var nodeTypes = Enum.GetValues(typeof(NodeTypeEnum)).Cast<NodeTypeEnum>();
+            foreach (var nodeType in nodeTypes)
+            {
+                bool isEditable = nodeType == NodeTypeEnum.Common;
+                string populateQuery = @$"
+                    INSERT INTO node_types (id, name, is_editable)
+                    VALUES ({(int)nodeType}, '{nodeType}', {isEditable})
+                    ON CONFLICT DO NOTHING
+                    ;";
+
+                await connection.ExecuteAsync(populateQuery);
+            }
+
         }
     }
 }
