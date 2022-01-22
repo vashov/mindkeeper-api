@@ -31,7 +31,7 @@ namespace MindKeeper.Api.Data.Repositories.Users
             return user;
         }
 
-        public async Task<User> Get(long id)
+        public async Task<User> Get(int id)
         {
             const string query = "SELECT * FROM users WHERE id = @id;";
 
