@@ -77,7 +77,7 @@ namespace MindKeeper.Api.Services.Users
         {
             var claims = new List<Claim>
                 {
-                    new Claim("userId", user.Id.ToString())
+                    new Claim(AppClaimTypes.UserId, user.Id.ToString())
                     //new Claim(ClaimsIdentity.DefaultNameClaimType, "someLogin"),
                     //new Claim(ClaimsIdentity.DefaultRoleClaimType, "someRole")
                 };
