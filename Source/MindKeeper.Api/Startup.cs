@@ -13,11 +13,14 @@ using Microsoft.OpenApi.Models;
 using MindKeeper.Api.Core;
 using MindKeeper.Api.Core.Auth;
 using MindKeeper.Api.Data.Migrations;
+using MindKeeper.Shared.Models;
 using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace MindKeeper.Api
@@ -68,6 +71,10 @@ namespace MindKeeper.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MindKeeper.Api", Version = "v1" });
+
+                var xmlFile = $"{Assembly.GetAssembly(typeof(OperationResult)).GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         }
 
