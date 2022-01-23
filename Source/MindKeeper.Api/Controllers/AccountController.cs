@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MindKeeper.Api.Core.Routing;
 using MindKeeper.Api.Services.Users;
 using MindKeeper.Shared.Models;
 using MindKeeper.Shared.Models.ApiModels.Accounts;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace MindKeeper.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [ControllerRoute]
     public class AccountController : ControllerBase
     {
         private readonly ILogger<AccountController> _logger;
