@@ -34,35 +34,35 @@ namespace MindKeeper.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<OperationResult<GetNodeResponse>> Get([FromRoute] int id)
+        public async Task<OperationResult<NodeGetResponse>> Get([FromRoute] int id)
         {
             var result = await _nodeService.Get(id);
 
-            var response = _mapper.Map<OperationResult<GetNodeResponse>>(result);
+            var response = _mapper.Map<OperationResult<NodeGetResponse>>(result);
             return response;
         }
 
         [HttpGet]
-        public async Task<OperationResult<GetAllNodesResponse>> GetAll([FromQuery] GetAllNodesRequest request)
+        public async Task<OperationResult<NodesGetAllResponse>> GetAll([FromQuery] NodesGetAllRequest request)
         {
             var filter = _mapper.Map<NodeFilter>(request);
 
             var result = await _nodeService.GetAll(filter);
 
             if (!result.IsOk)
-                return OperationResult<GetAllNodesResponse>.Error(result.ErrorMessage);
+                return OperationResult<NodesGetAllResponse>.Error(result.ErrorMessage);
 
-            var nodeDtos = _mapper.Map<List<GetAllNodesResponse.NodeResponse>>(result.Data);
-            var response = new GetAllNodesResponse() 
+            var nodeDtos = _mapper.Map<List<NodesGetAllResponse.NodeResponse>>(result.Data);
+            var response = new NodesGetAllResponse() 
             { 
                 Nodes = nodeDtos 
             };
 
-            return OperationResult<GetAllNodesResponse>.Ok(response);
+            return OperationResult<NodesGetAllResponse>.Ok(response);
         }
 
         [HttpPost("[action]")]
-        public async Task<OperationResult<CreateNodeResponse>> Create([FromBody] CreateNodeRequest request)
+        public async Task<OperationResult<NodeCreateResponse>> Create([FromBody] NodeCreateRequest request)
         {
             var userId = User.GetUserId();
             var result = await _nodeService.Create(
@@ -73,21 +73,30 @@ namespace MindKeeper.Api.Controllers
                 request.ParentId);
 
             if (!result.IsOk)
-                return OperationResult<CreateNodeResponse>.Error(result.ErrorMessage);
+                return OperationResult<NodeCreateResponse>.Error(result.ErrorMessage);
 
-            var response = new CreateNodeResponse()
+            var response = new NodeCreateResponse()
             {
                 Id = result.Data.Id
             };
 
-            return OperationResult<CreateNodeResponse>.Ok(response);
+            return OperationResult<NodeCreateResponse>.Ok(response);
         }
 
-        /*
-        public Task<OperationResult> SetParent(int nodeId, int parentNodeId);
-        public Task<OperationResult> DeleteParent(int nodeId, int parentNodeId);
-        public Task<OperationResult> SetChild(int nodeId, int childNodeId);
-        public Task<OperationResult> DeleteChild(int nodeId, int childNodeId);
-         */
+        [HttpPost("Link/Add")]
+        public async Task<OperationResult> AddLink([FromBody] NodeLinkAddRequest request)
+        {
+            var result = await _nodeService.CreateLink(request.ParentId, request.ChildId);
+
+            return result;
+        }
+
+        [HttpDelete("Link/Delete")]
+        public async Task<OperationResult> DeleteLink([FromBody] NodeLinkDeleteRequest request)
+        {
+            var result = await _nodeService.DeleteLink(request.ParentId, request.ChildId);
+
+            return result;
+        }
     }
 }

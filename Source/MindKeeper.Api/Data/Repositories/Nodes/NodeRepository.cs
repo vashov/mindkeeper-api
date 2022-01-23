@@ -106,33 +106,17 @@ namespace MindKeeper.Api.Data.Repositories.Nodes
             return nodes.ToList();
         }
 
-        public async Task<bool> SetChild(int nodeId, int childNodeId)
+        public async Task<bool> CreateLink(int parentId, int childId)
         {
-            string query = $"INSERT INTO node_node (parent_id, child_id) VALUES ({nodeId}, {childNodeId});";
+            string query = $"INSERT INTO node_node (parent_id, child_id) VALUES ({parentId}, {childId});";
 
             var result = await _connection.ExecuteAsync(query);
             return result > 0;
         }
 
-        public async Task<bool> SetParent(int nodeId, int parentNodeId)
+        public async Task<bool> DeleteLink(int parentId, int childId)
         {
-            string query = $"INSERT INTO node_node (parent_id, child_id) VALUES ({parentNodeId}, {nodeId});";
-
-            var result = await _connection.ExecuteAsync(query);
-            return result > 0;
-        }
-
-        public async Task<bool> DeleteChild(int nodeId, int childNodeId)
-        {
-            string query = $"DELETE FROM node_node WHERE parent_id = {nodeId} AND child_id = {childNodeId};";
-
-            var result = await _connection.ExecuteAsync(query);
-            return result > 0;
-        }
-
-        public async Task<bool> DeleteParent(int nodeId, int parentNodeId)
-        {
-            string query = $"DELETE FROM node_node WHERE parent_id = {parentNodeId} AND child_id = {nodeId};";
+            string query = $"INSERT INTO node_node (parent_id, child_id) VALUES ({parentId}, {childId});";
 
             var result = await _connection.ExecuteAsync(query);
             return result > 0;

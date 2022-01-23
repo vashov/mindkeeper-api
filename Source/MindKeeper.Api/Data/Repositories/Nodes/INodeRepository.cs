@@ -10,9 +10,7 @@ namespace MindKeeper.Api.Data.Repositories.Nodes
         public Task<Node> Get(long id);
         public Task<List<Node>> GetAll(NodeFilter filter);
         public Task<Node> Create(int userId, string name, string descritpion, int typeId, int parentId);
-        public Task<bool> SetParent(int nodeId, int parentNodeId);
-        public Task<bool> DeleteParent(int nodeId, int parentNodeId);
-        public Task<bool> SetChild(int nodeId, int childNodeId);
-        public Task<bool> DeleteChild(int nodeId, int childNodeId);
+        public Task<bool> CreateLink(int parentId, int childId);
+        public Task<bool> DeleteLink(int parentId, int childId);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MindKeeper.Shared.Models.ApiModels.Nodes
 {
-    public class CreateNodeResponse
+    public class NodeCreateResponse
     {
         public int Id { get; set; }
     }

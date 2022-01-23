@@ -60,56 +60,36 @@ namespace MindKeeper.Api.Services.Nodes
             return OperationResult<List<Node>>.Ok(nodes);
         }
 
-        public async Task<OperationResult> SetChild(int nodeId, int childNodeId)
+        public async Task<OperationResult> CreateLink(int parentId, int childId)
         {
-            OperationResult validateResult = await ValidateNodesAsFutureChildAndParent(nodeId, childNodeId);
+            // TODO: try-catch.
+
+            OperationResult validateResult = await ValidateNodesAsFutureChildAndParent(parentId, childId);
             if (!validateResult.IsOk)
                 return validateResult;
 
-            var created = await _nodeRepository.SetChild(nodeId, childNodeId);
+            var created = await _nodeRepository.CreateLink(parentId, childId);
 
             return created
                 ? OperationResult.Ok()
-                : OperationResult.Error($"Connection of node {nodeId} with child {childNodeId} wasn't created.");
+                : OperationResult.Error(
+                    $"Connection of node (parent) {parentId} with node (child) {childId} wasn't created.");
         }
 
-        public async Task<OperationResult> SetParent(int nodeId, int parentNodeId)
+        public async Task<OperationResult> DeleteLink(int parentId, int childId)
         {
-            OperationResult validateResult = await ValidateNodesAsFutureChildAndParent(parentNodeId, nodeId);
+            // TODO: try-catch.
+
+            OperationResult validateResult = await ValidateNodesAsFutureChildAndParent(parentId, childId);
             if (!validateResult.IsOk)
                 return validateResult;
 
-            var created = await _nodeRepository.SetParent(nodeId, parentNodeId);
-
-            return created
-                ? OperationResult.Ok()
-                : OperationResult.Error($"Connection of node {nodeId} with parent {parentNodeId} wasn't created.");
-        }
-
-        public async Task<OperationResult> DeleteChild(int nodeId, int childNodeId)
-        {
-            OperationResult validateResult = await ValidateNodesAsFutureChildAndParent(nodeId, childNodeId);
-            if (!validateResult.IsOk)
-                return validateResult;
-
-            var deleted = await _nodeRepository.DeleteChild(nodeId, childNodeId);
+            var deleted = await _nodeRepository.DeleteLink(parentId, childId);
 
             return deleted
                 ? OperationResult.Ok()
-                : OperationResult.Error($"Connection of node {nodeId} with child {childNodeId} wasn't deleted.");
-        }
-
-        public async Task<OperationResult> DeleteParent(int nodeId, int parentNodeId)
-        {
-            OperationResult validateResult = await ValidateNodesAsFutureChildAndParent(parentNodeId, nodeId);
-            if (!validateResult.IsOk)
-                return validateResult;
-
-            var deleted = await _nodeRepository.DeleteParent(nodeId, parentNodeId);
-
-            return deleted
-                ? OperationResult.Ok()
-                : OperationResult.Error($"Connection of node {nodeId} with parent {parentNodeId} wasn't deleted.");
+                : OperationResult.Error(
+                    $"Connection of node (parent) {parentId} with node (child) {childId} wasn't deleted.");
         }
 
         private static bool ValidateNameAndDescription(string name, string description, out string errorMsg)

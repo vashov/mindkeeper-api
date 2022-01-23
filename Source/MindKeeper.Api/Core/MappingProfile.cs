@@ -7,12 +7,12 @@ namespace MindKeeper.Api.Core
         public MappingProfile()
         {
             CreateMap<MindKeeper.Api.Data.Entities.Node,
-                Shared.Models.ApiModels.Nodes.GetNodeResponse>();
+                Shared.Models.ApiModels.Nodes.NodeGetResponse>();
 
             CreateMap<MindKeeper.Api.Data.Entities.Node,
-                Shared.Models.ApiModels.Nodes.GetAllNodesResponse.NodeResponse>();
+                Shared.Models.ApiModels.Nodes.NodesGetAllResponse.NodeResponse>();
 
-            CreateMap<Shared.Models.ApiModels.Nodes.GetAllNodesRequest,
+            CreateMap<Shared.Models.ApiModels.Nodes.NodesGetAllRequest,
                 Data.Repositories.Nodes.Models.NodeFilter>();
         }
     }

@@ -2,7 +2,7 @@
 
 namespace MindKeeper.Shared.Models.ApiModels.Nodes
 {
-    public class GetAllNodesRequest
+    public class NodesGetAllRequest
     {
         public int UserId { get; set; }
         public string Name { get; set; }

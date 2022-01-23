@@ -2,7 +2,7 @@
 
 namespace MindKeeper.Shared.Models.ApiModels.Nodes
 {
-    public class CreateNodeRequest
+    public class NodeCreateRequest
     {
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; }
