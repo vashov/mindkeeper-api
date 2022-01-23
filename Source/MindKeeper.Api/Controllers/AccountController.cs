@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MindKeeper.Api.Core.Routing;
 using MindKeeper.Api.Services.Users;
@@ -24,6 +25,7 @@ namespace MindKeeper.Api.Controllers
         }
 
         [HttpPost("[action]")]
+        [AllowAnonymous]
         public async Task<OperationResult> Registration([FromBody] RegistrationRequest request)
         {
             var result = await _userService.CreateUser(request.Mail, request.Password);
@@ -32,6 +34,7 @@ namespace MindKeeper.Api.Controllers
         }
 
         [HttpPost("[action]")]
+        [AllowAnonymous]
         public async Task<OperationResult<TokenResponse>> Token([FromBody] TokenRequest request)
         {
             var result = await _userService.CreateAccessToken(request.Username, request.Password);
