@@ -26,6 +26,8 @@ namespace MindKeeper.Api.Data.Migrations
             await CreateNodes(connection);
             await CreateNodeNode(connection);
             await CreateNodeTypes(connection);
+
+            await DbPopulation.Populate(connection);
         }
 
         private static async Task<bool> IsTableExist(IDbConnection connection, string tableName)
@@ -58,6 +60,7 @@ namespace MindKeeper.Api.Data.Migrations
 	                created_by int NOT NULL,
 	                created_at timestamp with time zone NOT NULL,
 	                updated_by int NOT NULL,
+                    updated_at timestamp with time zone NOT NULL,
 	                CONSTRAINT fk_user_created_by FOREIGN KEY (created_by) REFERENCES users(id),
 	                CONSTRAINT fk_user_updated_by FOREIGN KEY (updated_by) REFERENCES users(id)
                 );
@@ -107,20 +110,6 @@ namespace MindKeeper.Api.Data.Migrations
             ";
 
             await connection.ExecuteAsync(createQuery);
-
-            var nodeTypes = Enum.GetValues(typeof(NodeTypeEnum)).Cast<NodeTypeEnum>();
-            foreach (var nodeType in nodeTypes)
-            {
-                bool isEditable = nodeType == NodeTypeEnum.Common;
-                string populateQuery = @$"
-                    INSERT INTO node_types (id, name, is_editable)
-                    VALUES ({(int)nodeType}, '{nodeType}', {isEditable})
-                    ON CONFLICT DO NOTHING
-                    ;";
-
-                await connection.ExecuteAsync(populateQuery);
-            }
-
         }
     }
 }

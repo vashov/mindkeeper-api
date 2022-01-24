@@ -18,7 +18,7 @@ namespace MindKeeper.Api.Data.Repositories.Users
 
         public async Task<User> Create(string mail, string passwordHash)
         {
-            string normalizedMail = mail.ToUpper();
+            string normalizedMail = mail.ToLower();
 
             const string createCommand = @"
                 INSERT INTO users (mail, normalized_mail, password_hash)
@@ -39,13 +39,20 @@ namespace MindKeeper.Api.Data.Repositories.Users
             return user;
         }
 
-        public async Task<User> Get(string mail)
+        public async Task<User> Get(string mail, bool isNormalizedSearch = false)
         {
-            string normalizedMail = mail.ToUpper();
+            string query;
+            if (isNormalizedSearch)
+            {
+                query = "SELECT * FROM users WHERE normalized_mail = @mail;";
+                mail = mail.ToLower();
+            }
+            else
+            {
+                query = "SELECT * FROM users WHERE mail = @mail;";
+            }
 
-            const string query = "SELECT * FROM users WHERE normalized_mail = @normalizedMail;";
-
-            var user = await _connection.QuerySingleOrDefaultAsync<User>(query, new { normalizedMail });
+            var user = await _connection.QuerySingleOrDefaultAsync<User>(query, new { mail });
             return user;
         }
 

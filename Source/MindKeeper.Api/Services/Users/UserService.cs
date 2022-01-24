@@ -33,7 +33,7 @@ namespace MindKeeper.Api.Services.Users
             if (string.IsNullOrWhiteSpace(password))
                 return OperationResult<User>.Error("Invalid password.");
 
-            var userByMail = await _userRepository.Get(mail);
+            var userByMail = await _userRepository.Get(mail, isNormalizedSearch: true);
             if (userByMail != null)
                 return OperationResult<User>.Error("Username is used already.");
 
@@ -50,7 +50,7 @@ namespace MindKeeper.Api.Services.Users
         {
             const string credentialsError = "Invalid mail or password.";
             
-            var userByMail = await _userRepository.Get(mail);
+            var userByMail = await _userRepository.Get(mail, isNormalizedSearch: false);
             if (userByMail == null)
                 return OperationResult<string>.Error(credentialsError);
 

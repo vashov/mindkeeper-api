@@ -7,7 +7,7 @@ namespace MindKeeper.Api.Data.Repositories.Users
     public interface IUserRepository
     {
         public Task<User> Get(int id);
-        public Task<User> Get(string mail);
+        public Task<User> Get(string mail, bool isNormalizedSearch = false);
         public Task<List<User>> GetAll();
         public Task<User> Create(string mail, string passwordHash);
     }
