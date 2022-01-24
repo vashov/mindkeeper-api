@@ -1,0 +1,423 @@
+[
+  {
+    "domain": "Archaeology",
+    "subdomains": [
+      "Prehistory",
+      "Antiquity and late antiquity",
+      "Oriental archaeology",
+      "Mediaeval archaeology",
+      "Industrial archaeology",
+      "Preservation and restoration, museums",
+      "Methods and techniques",
+      "Archeology, other"
+    ]
+  },
+  {
+    "domain": "Area studies",
+    "subdomains": [
+      "Asian languages and literature",
+      "Asian religions and philosophies",
+      "Jewish studies",
+      "Islamic studies",
+      "Iranian and Armenian studies",
+      "Central Asian studies",
+      "Indian studies",
+      "South-east Asian studies",
+      "Sinology",
+      "Japanese studies",
+      "Area studies, other"
+    ]
+  },
+  {
+    "domain": "Art and architecture",
+    "subdomains": [
+      "Pre-historic and pre-classical art",
+      "Antiquity and late antiquity art",
+      "Mediaeval art",
+      "Renaissance and Baroque art",
+      "Modern and contemporary art",
+      "Oriental art and architecture",
+      "Iconography",
+      "History of architecture",
+      "Urban studies",
+      "Preservation and restoration of cultural heritage",
+      "Museums and collections",
+      "Art and architecture, other"
+    ]
+  },
+  {
+    "domain": "Astronomy, astrophysics",
+    "subdomains": [
+      "Planetary science",
+      "Astronomy, astrophysics, other"
+    ]
+  },
+  {
+    "domain": "Biology",
+    "subdomains": [
+      "Microbiology",
+      "Biogeography, taxonomy",
+      "Animal ethology, animal psychology",
+      "Ecology",
+      "Botany",
+      "Zoology",
+      "Toxicology (plants, invertebrates)",
+      "Biotechnology",
+      "Biology, other"
+    ]
+  },
+  {
+    "domain": "Business administration",
+    "subdomains": [
+      "Business administration"
+    ]
+  },
+  {
+    "domain": "Chemistry",
+    "subdomains": [
+      "Analytical chemistry",
+      "Macromolecular chemistry, polymer chemistry",
+      "Organic chemistry",
+      "Inorganic chemistry",
+      "Physical chemistry",
+      "Catalysis",
+      "Theoretical chemistry, quantum chemistry",
+      "Chemistry, other"
+    ]
+  },
+  {
+    "domain": "Communication science",
+    "subdomains": [
+      "Communication science"
+    ]
+  },
+  {
+    "domain": "Computer science",
+    "subdomains": [
+      "Computer systems, architectures, networks",
+      "Software, algorithms, control systems",
+      "Theoretical computer science",
+      "Information systems, databases",
+      "User interfaces, multimedia",
+      "Artificial intelligence, expert systems",
+      "Computer graphics",
+      "Computer simulation, virtual reality",
+      "Computer science, other",
+      "Bioinformatics/biostatistics, biomathematics, biomechanics"
+    ]
+  },
+  {
+    "domain": "Computers and the humanities",
+    "subdomains": [
+      "Software for humanities",
+      "Textual and content analysis",
+      "Textual and linguistic corpora",
+      "Databases for humanities",
+      "Hypertexts and multimedia",
+      "Computers and the humanities, other"
+    ]
+  },
+  {
+    "domain": "Cultural anthropology",
+    "subdomains": [
+      "Cultural anthropology"
+    ]
+  },
+  {
+    "domain": "Demography",
+    "subdomains": [
+      "Demography"
+    ]
+  },
+  {
+    "domain": "Development studies",
+    "subdomains": [
+      "Development studies"
+    ]
+  },
+  {
+    "domain": "Earth sciences",
+    "subdomains": [
+      "Geochemistry, geophysics",
+      "Paleontology, stratigraphy",
+      "Geodynamics, sedimentation, tectonics, geomorphology",
+      "Petrology, mineralogy, sedimentology",
+      "Atmosphere sciences",
+      "Hydrosphere sciences",
+      "Geodesy, physical geography",
+      "Earth sciences, other"
+    ]
+  },
+  {
+    "domain": "Economy",
+    "subdomains": [
+      "Microeconomics",
+      "Macroeconomics",
+      "Econometrics"
+    ]
+  },
+  {
+    "domain": "Environmental science",
+    "subdomains": [
+      "Environmental science"
+    ]
+  },
+  {
+    "domain": "Gender studies",
+    "subdomains": [
+      "Gender studies"
+    ]
+  },
+  {
+    "domain": "Geography / planning",
+    "subdomains": [
+      "Geography",
+      "Planning"
+    ]
+  },
+  {
+    "domain": "History",
+    "subdomains": [
+      "Pre-classical civilizations",
+      "Antiquity and late antiquity history",
+      "Mediaeval history",
+      "Modern and contemporary history",
+      "Social and economic history",
+      "Cultural history",
+      "Comparative political history",
+      "Librarianschip, archive studies",
+      "History, other",
+      "History and philosophy of science and technology",
+      "History of ancient science",
+      "History of mediaeval science",
+      "History of modern science",
+      "History of contemporary science",
+      "History of technology",
+      "History of Science, other",
+      "History of religions",
+      "History of Christianity",
+      "Theology and history of theology"
+    ]
+  },
+  {
+    "domain": "History of science",
+    "subdomains": [
+      "History of ancient science",
+      "History of mediaeval science",
+      "History of modern science",
+      "History of contemporary science",
+      "History of technology",
+      "Science museums and collections",
+      "History of science, other"
+    ]
+  },
+  {
+    "domain": "Language and literature",
+    "subdomains": [
+      "Pre-classical philology and literature",
+      "Greek and Latin philology and literature",
+      "Mediaeval and Neo-Latin languages and literature",
+      "Mediaeval European languages and literature",
+      "Modern European languages and literature",
+      "Anglo-American literature",
+      "Hispanic and Brazilian literature",
+      "African languages and literature",
+      "Comparative literature",
+      "Language and literature, other"
+    ]
+  },
+  {
+    "domain": "Law",
+    "subdomains": [
+      "Private law",
+      "Constitutional and Administrative law",
+      "International and European law",
+      "Criminal law and Criminology"
+    ]
+  },
+  {
+    "domain": "Life sciences",
+    "subdomains": [
+      "Bioinformatics/biostatistics, biomathematics, biomechanics",
+      "Biophysics, clinical physics",
+      "Biochemistry",
+      "Genetics",
+      "Histology, cell biology",
+      "Anatomy, morphology",
+      "Physiology",
+      "Immunology, serology",
+      "Life sciences, other"
+    ]
+  },
+  {
+    "domain": "Life sciences and medicine",
+    "subdomains": [
+      "History and philosophy of the life sciences, ethics and evolution biology"
+    ]
+  },
+  {
+    "domain": "Linguistics",
+    "subdomains": [
+      "Phonetics and phonology",
+      "Morphology, grammar and syntax",
+      "Semantics and philosophy of language",
+      "Linguistic typology and comparative linguistics",
+      "Dialectology, linguistic geography, sociolinguistic",
+      "Lexicon and lexicography",
+      "Psycholinguistics and neurolinguistics",
+      "Computational linguistics and philology",
+      "Linguistic statistics",
+      "Language teaching and acquisition",
+      "Translation studies",
+      "Linguistics, other"
+    ]
+  },
+  {
+    "domain": "Medicine",
+    "subdomains": [
+      "Pathology, pathological anatomy",
+      "Organs and organ systems",
+      "Medical specialisms",
+      "Health sciences",
+      "Kinesiology",
+      "Gerontology",
+      "Nutrition",
+      "Epidemiology",
+      "Health Services Research",
+      "Health law",
+      "Health economics",
+      "Medical sociology",
+      "Medicine, other"
+    ]
+  },
+  {
+    "domain": "Mathematics",
+    "subdomains": [
+      "Logic, set theory and arithmetic",
+      "Algebra, group theory",
+      "Functions, differential equations",
+      "Fourier analysis, functional analysis",
+      "Geometry, topology",
+      "Probability theory, statistics",
+      "Operations research",
+      "Numerical analysis",
+      "Mathematics, other"
+    ]
+  },
+  {
+    "domain": "Music, theatre, performing arts and media",
+    "subdomains": [
+      "Ethnomusicology",
+      "History of music and musical iconography",
+      "Musicology",
+      "Opera and dance",
+      "Theatre studies and iconography",
+      "Film, photography and audio-visual media",
+      "Journalism and mass communications",
+      "Media studies",
+      "Music, theatre, performing arts and media, other"
+    ]
+  },
+  {
+    "domain": "Pedagogics",
+    "subdomains": [
+      "Pedagogics"
+    ]
+  },
+  {
+    "domain": "Philosophy",
+    "subdomains": [
+      "Metaphysics, theoretical philosophy",
+      "Ethics, moral philosophy",
+      "Logic and history of logic",
+      "Epistemology, philosophy of science",
+      "Aesthetics, philosophy of art",
+      "Philosophy of language, semiotics",
+      "History of ideas and intellectual history",
+      "History of ancient and mediaeval philosophy",
+      "History of modern and contemporary philosophy",
+      "History of political and economic theory",
+      "Philosophy, other",
+      "History and philosophy of science and technology"
+    ]
+  },
+  {
+    "domain": "Physics",
+    "subdomains": [
+      "Subatomic physics",
+      "Nanophysics/technology",
+      "Condensed matter and optical physics",
+      "Processes in living systems",
+      "Fusion physics",
+      "Phenomenological physics",
+      "Other physics",
+      "Theoretical physics"
+    ]
+  },
+  {
+    "domain": "Psychology",
+    "subdomains": [
+      "Clinical Psychology",
+      "Biological and Medical Psychology",
+      "Developmental Psychology",
+      "Psychonomics and Cognitive Psychology",
+      "Social and Organizational Psychology",
+      "Psychometrics"
+    ]
+  },
+  {
+    "domain": "Public administration and political science",
+    "subdomains": [
+      "Public administration",
+      "Political science"
+    ]
+  },
+  {
+    "domain": "Religious studies and theology",
+    "subdomains": [
+      "History of religions",
+      "History of Christianity",
+      "Theology and history of theology",
+      "Bible studies",
+      "Religious studies and theology, other"
+    ]
+  },
+  {
+    "domain": "Science of Teaching",
+    "subdomains": [
+      "Science of Teaching"
+    ]
+  },
+  {
+    "domain": "Science and technology",
+    "subdomains": [
+      "History and philosophy of science and technology"
+    ]
+  },
+  {
+    "domain": "Sociology",
+    "subdomains": [
+      "Sociology"
+    ]
+  },
+  {
+    "domain": "Technology",
+    "subdomains": [
+      "Materials technology",
+      "Mechanical engineering",
+      "Electrical engineering",
+      "Civil engineering",
+      "Chemical technology, process technology",
+      "Geotechnics",
+      "Technology assessment",
+      "Nanotechnology",
+      "Technology, other"
+    ]
+  },
+  {
+    "domain": "Veterinary medicine",
+    "subdomains": [
+      "Veterinary medicine"
+    ]
+  }
+]

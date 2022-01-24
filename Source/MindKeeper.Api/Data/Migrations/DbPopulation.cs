@@ -2,6 +2,7 @@
 using MindKeeper.Api.Core.Auth;
 using MindKeeper.Api.Data.Constants;
 using MindKeeper.Api.Data.Migrations.Countries;
+using MindKeeper.Api.Data.Migrations.ScientificDomains;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,6 +20,7 @@ namespace MindKeeper.Api.Data.Migrations
             await InsertSystemUser(connection);
             await InsertNodeTypes(connection);
             await InsertCountries(connection);
+            await InsertScientificDomains(connection);
         }
 
         private static async Task InsertNodeTypes(IDbConnection connection)
@@ -102,9 +104,7 @@ namespace MindKeeper.Api.Data.Migrations
                 return;
 
             using var fileReader = File.OpenRead(@".\Data\Migrations\Countries\countries.json");
-            //using var streamReader = new StreamReader(fileReader);
 
-            //var json = await streamReader.ReadToEndAsync();
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var countries = await JsonSerializer.DeserializeAsync<List<CountryModel>>(fileReader, options);
 
@@ -129,6 +129,76 @@ namespace MindKeeper.Api.Data.Migrations
                 
 
                 await connection.ExecuteAsync(template.RawSql, template.Parameters);
+            }
+        }
+
+        private static async Task InsertScientificDomains(IDbConnection connection)
+        {
+            string query = @$"
+                SELECT EXISTS (
+                    SELECT n.id FROM nodes n
+                    INNER JOIN node_types nt ON n.type_id = nt.id
+                    WHERE nt.id = {(int)NodeTypeEnum.Domain}
+                    LIMIT 1
+                );
+            ";
+
+            var isDomainsLoaded = await connection.QuerySingleAsync<bool>(query);
+            if (isDomainsLoaded)
+                return;
+
+            using var fileReader = File.OpenRead(@".\Data\Migrations\ScientificDomains\scientific_domains.json");
+
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var domains = await JsonSerializer.DeserializeAsync<List<ScientificDomain>>(fileReader, options);
+
+            var domainTypeId = (int)NodeTypeEnum.Domain;
+            var subdomainTypeId = (int)NodeTypeEnum.Subdomain;
+
+            var userId = SystemUser.Id;
+            var now = DateTimeOffset.UtcNow;
+
+            const string populateQuery = @"
+                    INSERT INTO nodes (name, type_id, created_by, created_at, updated_by, updated_at)
+                    VALUES (@name, @typeId, @userId, @now, @userId, @now)
+                    RETURNING id
+                    ;";
+
+            foreach (var domain in domains)
+            {
+                var domainName = domain.Domain;
+
+                var domainBuilder = new SqlBuilder();
+                var domainTemplate = domainBuilder.AddTemplate(
+                    populateQuery,
+                    new { name = domainName, typeId = domainTypeId, userId, now });
+
+                var domainId = await connection.QuerySingleAsync<int>(
+                    domainTemplate.RawSql, domainTemplate.Parameters);
+
+                if (domainId == default)
+                {
+                    Console.WriteLine($"Domain: {domainName} id is default.");
+                    continue;
+                }
+
+                foreach (var subdomainName in domain.Subdomains)
+                {
+                    var subdomainBuilder = new SqlBuilder();
+                    var subdomainTemplate = subdomainBuilder.AddTemplate(
+                        populateQuery,
+                        new { name = subdomainName, typeId = subdomainTypeId, userId, now });
+
+                    var subdomainId = await connection.QuerySingleAsync<int>(
+                        subdomainTemplate.RawSql, subdomainTemplate.Parameters);
+
+                    string populateLinkQuery = $@"
+                        INSERT INTO node_node (parent_id, child_id)
+                        VALUES ({domainId}, {subdomainId})
+                        ;";
+
+                    await connection.ExecuteAsync(populateLinkQuery);
+                }
             }
         }
     }
