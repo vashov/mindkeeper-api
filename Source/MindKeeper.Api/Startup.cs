@@ -25,8 +25,7 @@ namespace MindKeeper.Api
 {
     public class Startup
     {
-        private readonly string _dbConnectionString = Environment.GetEnvironmentVariable("DefaultConnection")
-            ?? throw new NotImplementedException("Setup connection string.");
+        private readonly string _dbConnectionString = SqlConnectionStringBuilder.Build();
 
         public Startup(IConfiguration configuration)
         {
