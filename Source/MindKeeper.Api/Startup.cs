@@ -20,6 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace MindKeeper.Api
 {
@@ -48,6 +50,36 @@ namespace MindKeeper.Api
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
+                    var events = new JwtBearerEvents
+                    {
+                        OnChallenge = context =>
+                        {
+                            context.Response.OnStarting(async () =>
+                            {
+                                if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
+                                {
+                                    var response = new Response("Unauthorized")
+                                    {
+                                        Status = (int)HttpStatusCode.Unauthorized
+                                    };
+
+                                    await context.Response.WriteAsJsonAsync(response);
+                                }
+                            });
+                            return Task.CompletedTask;
+                        },
+                        OnForbidden = async context =>
+                        {
+                            var response = new Response("Forbidden")
+                            {
+                                Status = (int)HttpStatusCode.Forbidden
+                            };
+
+                            await context.Response.WriteAsJsonAsync(response);
+                        }
+                    };
+                    options.Events = events;
+
                     options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
