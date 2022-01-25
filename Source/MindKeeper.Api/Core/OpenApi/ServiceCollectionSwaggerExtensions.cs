@@ -20,7 +20,7 @@ namespace MindKeeper.Api.Core.OpenApi
                 c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
                 c.OperationFilter<BasicAuthOperationsFilter>();
 
-                var xmlFile = $"{Assembly.GetAssembly(typeof(OperationResult)).GetName().Name}.xml";
+                var xmlFile = $"{Assembly.GetAssembly(typeof(Shared.Wrappers.Response)).GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });

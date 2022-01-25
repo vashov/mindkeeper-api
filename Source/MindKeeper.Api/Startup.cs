@@ -11,12 +11,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MindKeeper.Api.Core;
 using MindKeeper.Api.Core.Auth;
+using MindKeeper.Api.Core.Middlewares;
 using MindKeeper.Api.Core.OpenApi;
 using MindKeeper.Api.Data.Migrations;
+using MindKeeper.Shared.Wrappers;
 using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace MindKeeper.Api
 {
@@ -62,21 +65,37 @@ namespace MindKeeper.Api
                     };
                 });
 
-            services.AddControllers();
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.InvalidModelStateResponseFactory = actionContext =>
+                    {
+                        var errors = actionContext.ModelState.Values
+                            .SelectMany(c => c.Errors)
+                            .Where(c => !string.IsNullOrEmpty(c.ErrorMessage))
+                            .Select(c => c.ErrorMessage);
+                        var response = new Response("One or more validation errors.")
+                        {
+                            Errors = errors.ToList(),
+                        };
+                        return new BadRequestObjectResult(response);
+                    };
+                });
 
-            services.AddConfiguredSwagger();
+                services.AddConfiguredSwagger();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider services)
         {
             InitDatabase(services);
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MindKeeper.Api v1"));
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MindKeeper.Api v1"));
 
             app.UseHttpsRedirection();
 
@@ -84,6 +103,8 @@ namespace MindKeeper.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseErrorHandlingMiddleware();
 
             app.UseEndpoints(endpoints =>
             {

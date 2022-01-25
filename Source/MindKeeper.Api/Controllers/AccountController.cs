@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MindKeeper.Api.Core.Routing;
+using MindKeeper.Shared.Wrappers;
 using MindKeeper.Api.Services.Users;
-using MindKeeper.Shared.Models;
 using MindKeeper.Shared.Models.ApiModels.Accounts;
 using System.Threading.Tasks;
 
@@ -26,27 +26,25 @@ namespace MindKeeper.Api.Controllers
 
         [HttpPost("[action]")]
         [AllowAnonymous]
-        public async Task<OperationResult> Registration([FromBody] RegistrationRequest request)
+        public async Task<Response> Registration([FromBody] RegistrationRequest request)
         {
             var result = await _userService.CreateUser(request.Mail, request.Password);
 
-            return (OperationResult)result;
+            return new Response();
         }
 
         [HttpPost("[action]")]
         [AllowAnonymous]
-        public async Task<OperationResult<TokenResponse>> Token([FromBody] TokenRequest request)
+        public async Task<Response<TokenResponse>> Token([FromBody] TokenRequest request)
         {
             var result = await _userService.CreateAccessToken(request.Username, request.Password);
-            if (!result.IsOk)
-                return OperationResult<TokenResponse>.Error(result.ErrorMessage);
 
             var response = new TokenResponse
             {
-                AccessToken = result.Data
+                AccessToken = result
             };
 
-            return OperationResult<TokenResponse>.Ok(response);
+            return new Response<TokenResponse>(response);
         }
     }
 }

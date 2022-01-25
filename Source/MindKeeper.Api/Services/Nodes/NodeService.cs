@@ -1,9 +1,9 @@
-﻿using MindKeeper.Api.Data.Entities;
+﻿using MindKeeper.Api.Core.Exceptions;
+using MindKeeper.Api.Data.Entities;
 using MindKeeper.Api.Data.Repositories.Nodes;
 using MindKeeper.Api.Data.Repositories.Nodes.Models;
 using MindKeeper.Api.Data.Repositories.Users;
 using MindKeeper.Shared.Extensions;
-using MindKeeper.Shared.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,98 +21,72 @@ namespace MindKeeper.Api.Services.Nodes
             _userRepository = userRepository;
         }
 
-        public async Task<OperationResult<Node>> Create(int userId, string name, string descritpion, int typeId, int parentId)
+        public async Task<Node> Create(int userId, string name, string descritpion, int typeId, int parentId)
         {
             if (_userRepository.Get(userId) == null)
-                return OperationResult<Node>.Error("Invalid user id.");
+                throw new ApiException("Invalid user id.");
 
-            if (!ValidateNameAndDescription(name, descritpion, out string errorMsg))
-                return OperationResult<Node>.Error(errorMsg);
+            ValidateNameAndDescription(name, descritpion);
 
             if (parentId != default && (await _nodeRepository.Get(parentId)) == null)
-                return OperationResult<Node>.Error("Invalid parent node id.");
+                throw new ApiException("Invalid parent node id.");
 
             // TODO: validate typeId.
 
-            // TODO: try-catch.
             var node = await _nodeRepository.Create(userId, name, descritpion, typeId, parentId);
 
-            return OperationResult<Node>.Ok(node);
+            return node;
         }
 
-        public async Task<OperationResult<Node>> Get(long id)
+        public async Task<Node> Get(long id)
         {
-            // TODO: try-catch.
-
             var node = await _nodeRepository.Get(id);
+            if (node == null)
+                throw new ApiException($"Node {id} not found.");
 
-            return node == null
-                ? OperationResult<Node>.Error($"Node {id} not found.")
-                : OperationResult<Node>.Ok(node);
+            return node;
         }
 
-        public async Task<OperationResult<List<Node>>> GetAll(NodeFilter filter)
+        public async Task<List<Node>> GetAll(NodeFilter filter)
         {
-            // TODO: try-catch.
-
             var nodes = await _nodeRepository.GetAll(filter);
 
-            return OperationResult<List<Node>>.Ok(nodes);
+            return nodes;
         }
 
-        public async Task<OperationResult> CreateLink(int parentId, int childId)
+        public async Task CreateLink(int parentId, int childId)
         {
-            // TODO: try-catch.
-
-            OperationResult validateResult = await ValidateNodesAsFutureChildAndParent(parentId, childId);
-            if (!validateResult.IsOk)
-                return validateResult;
+            await ValidateNodesAsFutureChildAndParent(parentId, childId);
 
             var created = await _nodeRepository.CreateLink(parentId, childId);
-
-            return created
-                ? OperationResult.Ok()
-                : OperationResult.Error(
+            if (!created)
+                throw new ApiException(
                     $"Connection of node (parent) {parentId} with node (child) {childId} wasn't created.");
         }
 
-        public async Task<OperationResult> DeleteLink(int parentId, int childId)
+        public async Task DeleteLink(int parentId, int childId)
         {
-            // TODO: try-catch.
-
-            OperationResult validateResult = await ValidateNodesAsFutureChildAndParent(parentId, childId);
-            if (!validateResult.IsOk)
-                return validateResult;
+            await ValidateNodesAsFutureChildAndParent(parentId, childId);
 
             var deleted = await _nodeRepository.DeleteLink(parentId, childId);
 
-            return deleted
-                ? OperationResult.Ok()
-                : OperationResult.Error(
+            if (!deleted)
+                throw new ApiException(
                     $"Connection of node (parent) {parentId} with node (child) {childId} wasn't deleted.");
         }
 
-        private static bool ValidateNameAndDescription(string name, string description, out string errorMsg)
+        private static void ValidateNameAndDescription(string name, string description)
         {
             const int nameMaxLen = 100;
             if (string.IsNullOrWhiteSpace(name) || name.Length > nameMaxLen)
-            {
-                errorMsg = $"Name length should be > 0 and <= {nameMaxLen}.";
-                return false;
-            }
+                throw new AppValidationException($"Name length should be > 0 and <= {nameMaxLen}.");
 
             const int descriptionMaxLen = 1000;
             if (string.IsNullOrWhiteSpace(description) || description.Length > descriptionMaxLen)
-            {
-                errorMsg = $"Description length should be > 0 and <= {descriptionMaxLen}.";
-                return false;
-            }
-
-            errorMsg = string.Empty;
-            return true;
+                throw new AppValidationException($"Description length should be > 0 and <= {descriptionMaxLen}.");
         }
 
-        private async Task<OperationResult> ValidateNodesExist(params int[] nodes)
+        private async Task ValidateNodesExist(params int[] nodes)
         {
             var filter = new NodeFilter
             {
@@ -122,17 +96,15 @@ namespace MindKeeper.Api.Services.Nodes
             List<int> invalidNodes = nodes.Except(nodesResult.Select(n => n.Id)).ToList();
 
             if (invalidNodes.HasValues())
-                return OperationResult.Error($"Invalid nodes with id {string.Join(",", invalidNodes)}.");
-
-            return OperationResult.Ok();
+                throw new ApiException($"Invalid nodes with id {string.Join(",", invalidNodes)}.");
         }
 
-        private async Task<OperationResult> ValidateNodesAsFutureChildAndParent(int parentId, int childId)
+        private async Task ValidateNodesAsFutureChildAndParent(int parentId, int childId)
         {
             if (parentId == childId)
-                return OperationResult.Error("Nodes should have different ID.");
+                throw new AppValidationException("Nodes should have different ID.");
 
-            return await ValidateNodesExist(parentId, childId);
+            await ValidateNodesExist(parentId, childId);
         }
     }
 }

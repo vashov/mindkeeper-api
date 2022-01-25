@@ -1,8 +1,8 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MindKeeper.Api.Core.Auth;
+using MindKeeper.Api.Core.Exceptions;
 using MindKeeper.Api.Data.Repositories.Users;
 using MindKeeper.Api.Data.Repositories.Users.Models;
-using MindKeeper.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,22 +20,22 @@ namespace MindKeeper.Api.Services.Users
             _userRepository = userRepository;
         }
 
-        public async Task<OperationResult<string>> RefreshToken(string refreshToken)
+        public async Task<string> RefreshToken(string refreshToken)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<OperationResult<User>> CreateUser(string mail, string password)
+        public async Task<User> CreateUser(string mail, string password)
         {
             if (string.IsNullOrWhiteSpace(mail))
-                return OperationResult<User>.Error("Invalid username.");
+                throw new AppValidationException("Invalid username.");
 
             if (string.IsNullOrWhiteSpace(password))
-                return OperationResult<User>.Error("Invalid password.");
+                throw new AppValidationException("Invalid password.");
 
             var userByMail = await _userRepository.Get(mail, isNormalizedSearch: true);
             if (userByMail != null)
-                return OperationResult<User>.Error("Username is used already.");
+                throw new ApiException("Username is used already.");
 
             var passwordHasher = new PasswordHasher();
             var passwordHash = passwordHasher.CreateHash(password);
@@ -43,20 +43,20 @@ namespace MindKeeper.Api.Services.Users
 
             createdUser.PasswordHash = string.Empty;
 
-            return OperationResult<User>.Ok(createdUser);
+            return createdUser;
         }
 
-        public async Task<OperationResult<string>> CreateAccessToken(string mail, string password)
+        public async Task<string> CreateAccessToken(string mail, string password)
         {
             const string credentialsError = "Invalid mail or password.";
             
             var userByMail = await _userRepository.Get(mail, isNormalizedSearch: false);
             if (userByMail == null)
-                return OperationResult<string>.Error(credentialsError);
+                throw new ApiException(credentialsError);
 
             var passwordHasher = new PasswordHasher();
             if (!passwordHasher.ArePasswordsEqual(password, userByMail.PasswordHash))
-                return OperationResult<string>.Error(credentialsError);
+                throw new ApiException(credentialsError);
 
             var userIdentity = GetUserClaims(userByMail);
             var now = DateTime.UtcNow;
@@ -70,7 +70,7 @@ namespace MindKeeper.Api.Services.Users
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            return OperationResult<string>.Ok(encodedJwt);
+            return encodedJwt;
         }
 
         private ClaimsIdentity GetUserClaims(User user)
