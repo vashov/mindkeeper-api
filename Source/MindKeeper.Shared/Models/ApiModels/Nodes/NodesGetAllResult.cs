@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MindKeeper.Shared.Models.ApiModels.Nodes
 {
-    public class NodesGetAllResponse
+    public class NodesGetAllResult
     {
         public class NodeResponse
         {

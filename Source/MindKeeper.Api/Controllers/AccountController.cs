@@ -35,16 +35,16 @@ namespace MindKeeper.Api.Controllers
 
         [HttpPost("[action]")]
         [AllowAnonymous]
-        public async Task<Response<TokenResponse>> Token([FromBody] TokenRequest request)
+        public async Task<Response<TokenResult>> Token([FromBody] TokenRequest request)
         {
             var result = await _userService.CreateAccessToken(request.Username, request.Password);
 
-            var response = new TokenResponse
+            var response = new TokenResult
             {
                 AccessToken = result
             };
 
-            return new Response<TokenResponse>(response);
+            return new Response<TokenResult>(response);
         }
     }
 }

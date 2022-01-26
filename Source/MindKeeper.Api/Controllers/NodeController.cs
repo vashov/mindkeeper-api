@@ -35,32 +35,32 @@ namespace MindKeeper.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<Response<NodeGetResponse>> Get([FromRoute] int id)
+        public async Task<Response<NodeGetResult>> Get([FromRoute] int id)
         {
             var result = await _nodeService.Get(id);
 
-            var response = _mapper.Map<NodeGetResponse>(result);
-            return new Response<NodeGetResponse>(response);
+            var response = _mapper.Map<NodeGetResult>(result);
+            return new Response<NodeGetResult>(response);
         }
 
         [HttpGet]
-        public async Task<Response<NodesGetAllResponse>> GetAll([FromQuery] NodesGetAllRequest request)
+        public async Task<Response<NodesGetAllResult>> GetAll([FromQuery] NodesGetAllRequest request)
         {
             var filter = _mapper.Map<NodeFilter>(request);
 
             var result = await _nodeService.GetAll(filter);
 
-            var nodeDtos = _mapper.Map<List<NodesGetAllResponse.NodeResponse>>(result);
-            var response = new NodesGetAllResponse() 
+            var nodeDtos = _mapper.Map<List<NodesGetAllResult.NodeResponse>>(result);
+            var response = new NodesGetAllResult() 
             { 
                 Nodes = nodeDtos 
             };
 
-            return new Response<NodesGetAllResponse>(response);
+            return new Response<NodesGetAllResult>(response);
         }
 
         [HttpPost("[action]")]
-        public async Task<Response<NodeCreateResponse>> Create([FromBody] NodeCreateRequest request)
+        public async Task<Response<NodeCreateResult>> Create([FromBody] NodeCreateRequest request)
         {
             var userId = User.GetUserId();
             var result = await _nodeService.Create(
@@ -70,12 +70,12 @@ namespace MindKeeper.Api.Controllers
                 (int)NodeTypeEnum.Common,
                 request.ParentId);
 
-            var response = new NodeCreateResponse()
+            var response = new NodeCreateResult()
             {
                 Id = result.Id
             };
 
-            return new Response<NodeCreateResponse>(response);
+            return new Response<NodeCreateResult>(response);
         }
 
         [HttpPost("Link/Add")]
