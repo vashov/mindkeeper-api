@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindKeeper.Api", "MindKeeper.Api\MindKeeper.Api.csproj", "{28771C75-64C9-4850-9C52-FCDC487AC01B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindKeeper.Shared", "MindKeeper.Shared\MindKeeper.Shared.csproj", "{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28771C75-64C9-4850-9C52-FCDC487AC01B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28771C75-64C9-4850-9C52-FCDC487AC01B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28771C75-64C9-4850-9C52-FCDC487AC01B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28771C75-64C9-4850-9C52-FCDC487AC01B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {835EA99F-6735-4894-88E1-1F06D4D03468}
+	EndGlobalSection
+EndGlobal
