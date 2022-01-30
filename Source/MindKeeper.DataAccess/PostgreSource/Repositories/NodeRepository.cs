@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace MindKeeper.DataAccess.PostgreSource.Repositories
 {
-    public class NodeRepository : IIdeaRepository
+    public class IdeaRepository : IIdeaRepository
     {
         private readonly IDbConnection _connection;
 
-        public NodeRepository(IDbConnection connection)
+        public IdeaRepository(IDbConnection connection)
         {
             _connection = connection;
         }
@@ -24,14 +24,14 @@ namespace MindKeeper.DataAccess.PostgreSource.Repositories
         {
             var now = DateTimeOffset.UtcNow;
 
-            const string createNodeCommand = @"
+            const string createIdeaCommand = @"
                 INSERT INTO nodes (name, descritpion, type_id, created_by, created_at, updated_by, updated_at)
                 VALUES (@name, @descritpion, @typeId, @userId, @now, @userId, @now)
                 RETURNING *;
             ";
 
-            var node = await _connection.QuerySingleAsync<Idea>(
-                createNodeCommand,
+            var idea = await _connection.QuerySingleAsync<Idea>(
+                createIdeaCommand,
                 new { userId, name, descritpion, typeId, parentId, now });
 
             const string createParentChildCommand = @"
@@ -41,29 +41,29 @@ namespace MindKeeper.DataAccess.PostgreSource.Repositories
 
             if (parentId != default)
             {
-                int childId = node.Id;
+                int childId = idea.Id;
                 await _connection.ExecuteAsync(
                     createParentChildCommand,
                     new { parentId, childId });
                 
-                node.Parents.Add(parentId);
+                idea.Parents.Add(parentId);
             }
             
-            return node;
+            return idea;
         }
 
         public async Task<Idea> Get(long id)
         {
             const string getQuery = "SELECT * FROM nodes WHERE id = @id";
 
-            var node = await _connection.QuerySingleOrDefaultAsync<Idea>(getQuery, new { id });
+            var idea = await _connection.QuerySingleOrDefaultAsync<Idea>(getQuery, new { id });
 
             // TODO: fill children and parents;
 
-            return node;
+            return idea;
         }
 
-        public async Task<List<Idea>> GetAll(NodeFilter filter)
+        public async Task<List<Idea>> GetAll(IdeaFilter filter)
         {
             const string getAllQuery = @"
                 SELECT n.*, nnc.child_id, nnp.parent_id FROM nodes n 
@@ -91,20 +91,20 @@ namespace MindKeeper.DataAccess.PostgreSource.Repositories
                 builder.Where("n.name ILIKE @Name");
             }
 
-            if (filter.Nodes.HasValues())
+            if (filter.Ideas.HasValues())
             {
-                builder.Where("n.id = ANY(@Nodes)");
+                builder.Where("n.id = ANY(@Ideas)");
             }
 
             var template = builder.AddTemplate(getAllQuery, filter);
 
             // TODO: mapping action many-to-many
 
-            var nodes = await _connection.QueryAsync<Idea>(
+            var ideas = await _connection.QueryAsync<Idea>(
                 template.RawSql,
                 template.Parameters);
 
-            return nodes.ToList();
+            return ideas.ToList();
         }
 
         public async Task<bool> CreateLink(int parentId, int childId)

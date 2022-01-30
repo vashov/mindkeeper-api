@@ -11,12 +11,12 @@ namespace MindKeeper.Api.Services.Ideas
 {
     public class IdeaService : IIdeaService
     {
-        private readonly IIdeaRepository _nodeRepository;
+        private readonly IIdeaRepository _ideaRepository;
         private readonly IUserRepository _userRepository;
 
-        public IdeaService(IIdeaRepository nodeRepository, IUserRepository userRepository)
+        public IdeaService(IIdeaRepository ideaRepository, IUserRepository userRepository)
         {
-            _nodeRepository = nodeRepository;
+            _ideaRepository = ideaRepository;
             _userRepository = userRepository;
         }
 
@@ -27,51 +27,51 @@ namespace MindKeeper.Api.Services.Ideas
 
             ValidateNameAndDescription(name, descritpion);
 
-            if (parentId != default && (await _nodeRepository.Get(parentId)) == null)
-                throw new ApiException("Invalid parent node id.");
+            if (parentId != default && (await _ideaRepository.Get(parentId)) == null)
+                throw new ApiException("Invalid parent idea id.");
 
             // TODO: validate typeId.
 
-            var node = await _nodeRepository.Create(userId, name, descritpion, typeId, parentId);
+            var idea = await _ideaRepository.Create(userId, name, descritpion, typeId, parentId);
 
-            return node;
+            return idea;
         }
 
         public async Task<Idea> Get(long id)
         {
-            var node = await _nodeRepository.Get(id);
-            if (node == null)
-                throw new ApiException($"Node {id} not found.");
+            var idea = await _ideaRepository.Get(id);
+            if (idea == null)
+                throw new ApiException($"idea {id} not found.");
 
-            return node;
+            return idea;
         }
 
-        public async Task<List<Idea>> GetAll(NodeFilter filter)
+        public async Task<List<Idea>> GetAll(IdeaFilter filter)
         {
-            var nodes = await _nodeRepository.GetAll(filter);
+            var ideas = await _ideaRepository.GetAll(filter);
 
-            return nodes;
+            return ideas;
         }
 
         public async Task CreateLink(int parentId, int childId)
         {
-            await ValidateNodesAsFutureChildAndParent(parentId, childId);
+            await ValidateIdeasAsFutureChildAndParent(parentId, childId);
 
-            var created = await _nodeRepository.CreateLink(parentId, childId);
+            var created = await _ideaRepository.CreateLink(parentId, childId);
             if (!created)
                 throw new ApiException(
-                    $"Connection of node (parent) {parentId} with node (child) {childId} wasn't created.");
+                    $"Connection of idea (parent) {parentId} with idea (child) {childId} wasn't created.");
         }
 
         public async Task DeleteLink(int parentId, int childId)
         {
-            await ValidateNodesAsFutureChildAndParent(parentId, childId);
+            await ValidateIdeasAsFutureChildAndParent(parentId, childId);
 
-            var deleted = await _nodeRepository.DeleteLink(parentId, childId);
+            var deleted = await _ideaRepository.DeleteLink(parentId, childId);
 
             if (!deleted)
                 throw new ApiException(
-                    $"Connection of node (parent) {parentId} with node (child) {childId} wasn't deleted.");
+                    $"Connection of idea (parent) {parentId} with idea (child) {childId} wasn't deleted.");
         }
 
         private static void ValidateNameAndDescription(string name, string description)
@@ -85,25 +85,25 @@ namespace MindKeeper.Api.Services.Ideas
                 throw new AppValidationException($"Description length should be > 0 and <= {descriptionMaxLen}.");
         }
 
-        private async Task ValidateNodesExist(params int[] nodes)
+        private async Task ValidateIdeasExist(params int[] ideas)
         {
-            var filter = new NodeFilter
+            var filter = new IdeaFilter
             {
-                Nodes = nodes.ToList()
+                Ideas = ideas.ToList()
             };
-            var nodesResult = await _nodeRepository.GetAll(filter);
-            List<int> invalidNodes = nodes.Except(nodesResult.Select(n => n.Id)).ToList();
+            var ideasResult = await _ideaRepository.GetAll(filter);
+            List<int> invalidIdeas = ideas.Except(ideasResult.Select(n => n.Id)).ToList();
 
-            if (invalidNodes.HasValues())
-                throw new ApiException($"Invalid nodes with id {string.Join(",", invalidNodes)}.");
+            if (invalidIdeas.HasValues())
+                throw new ApiException($"Invalid ideas with id {string.Join(",", invalidIdeas)}.");
         }
 
-        private async Task ValidateNodesAsFutureChildAndParent(int parentId, int childId)
+        private async Task ValidateIdeasAsFutureChildAndParent(int parentId, int childId)
         {
             if (parentId == childId)
-                throw new AppValidationException("Nodes should have different ID.");
+                throw new AppValidationException("Ideas should have different ID.");
 
-            await ValidateNodesExist(parentId, childId);
+            await ValidateIdeasExist(parentId, childId);
         }
     }
 }

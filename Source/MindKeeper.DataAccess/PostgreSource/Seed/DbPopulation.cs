@@ -18,12 +18,12 @@ namespace MindKeeper.DataAccess.PostgreSource.Seed
         public static async Task Populate(IDbConnection connection)
         {
             await InsertSystemUser(connection);
-            await InsertNodeTypes(connection);
+            await InsertIdeaTypes(connection);
             await InsertCountries(connection);
             await InsertScientificDomains(connection);
         }
 
-        private static async Task InsertNodeTypes(IDbConnection connection)
+        private static async Task InsertIdeaTypes(IDbConnection connection)
         {
             const string query = @"
                 SELECT EXISTS (
@@ -36,13 +36,13 @@ namespace MindKeeper.DataAccess.PostgreSource.Seed
             if (isNodeTypesLoaded)
                 return;
 
-            var nodeTypes = Enum.GetValues(typeof(NodeTypeEnum)).Cast<NodeTypeEnum>();
-            foreach (var nodeType in nodeTypes)
+            var ideaTypes = Enum.GetValues(typeof(NodeTypeEnum)).Cast<NodeTypeEnum>();
+            foreach (var ideaType in ideaTypes)
             {
-                bool isEditable = nodeType == NodeTypeEnum.Common;
+                bool isEditable = ideaType == NodeTypeEnum.Common;
                 string populateQuery = @$"
                     INSERT INTO node_types (id, name, is_editable)
-                    VALUES ({(int)nodeType}, '{nodeType}', {isEditable})
+                    VALUES ({(int)ideaType}, '{ideaType}', {isEditable})
                     ON CONFLICT DO NOTHING
                     ;";
 

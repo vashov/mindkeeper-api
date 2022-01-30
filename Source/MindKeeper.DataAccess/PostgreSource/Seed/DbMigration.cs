@@ -23,9 +23,9 @@ namespace MindKeeper.DataAccess.PostgreSource.Seed
             using var connection = (IDbConnection)_services.GetService(typeof(IDbConnection));
 
             await CreateUsers(connection);
-            await CreateNodes(connection);
-            await CreateNodeNode(connection);
-            await CreateNodeTypes(connection);
+            await CreateIdeas(connection);
+            await CreateIdeaIdea(connection);
+            await CreateIdeaTypes(connection);
 
             await DbPopulation.Populate(connection);
         }
@@ -49,7 +49,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Seed
             await connection.ExecuteAsync(createQuery);
         }
 
-        private static async Task CreateNodes(IDbConnection connection)
+        private static async Task CreateIdeas(IDbConnection connection)
         {
             const string createQuery = @"
                 CREATE TABLE IF NOT EXISTS nodes (
@@ -71,7 +71,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Seed
             await connection.ExecuteAsync(createQuery);
         }
 
-        private static async Task CreateNodeNode(IDbConnection connection)
+        private static async Task CreateIdeaIdea(IDbConnection connection)
         {
             const string createQuery = @"
                 CREATE TABLE IF NOT EXISTS node_node (
@@ -86,7 +86,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Seed
             await connection.ExecuteAsync(createQuery);
         }
 
-        private static async Task CreateNodeTypes(IDbConnection connection)
+        private static async Task CreateIdeaTypes(IDbConnection connection)
         {
             if (await IsTableExist(connection, "node_types"))
                 return;

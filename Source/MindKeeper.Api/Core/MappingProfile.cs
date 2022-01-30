@@ -13,7 +13,7 @@ namespace MindKeeper.Api.Core
                 Shared.Models.ApiModels.Ideas.IdeasGetAllResult.IdeaResponse>();
 
             CreateMap<Shared.Models.ApiModels.Ideas.IdeasGetAllRequest,
-                MindKeeper.Domain.Filters.NodeFilter>();
+                MindKeeper.Domain.Filters.IdeaFilter>();
         }
     }
 }

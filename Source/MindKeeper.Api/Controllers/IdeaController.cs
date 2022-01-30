@@ -20,23 +20,23 @@ namespace MindKeeper.Api.Controllers
     public class IdeaController : ControllerBase
     {
         private readonly ILogger<IdeaController> _logger;
-        private readonly IIdeaService _nodeService;
+        private readonly IIdeaService _ideaService;
         private readonly IMapper _mapper;
 
         public IdeaController(
             ILogger<IdeaController> logger,
-            IIdeaService nodeService,
+            IIdeaService ideaService,
             IMapper mapper)
         {
             _logger = logger;
-            _nodeService = nodeService;
+            _ideaService = ideaService;
             _mapper = mapper;
         }
 
         [HttpGet("{id}")]
         public async Task<Response<IdeaGetResult>> Get([FromRoute] int id)
         {
-            var result = await _nodeService.Get(id);
+            var result = await _ideaService.Get(id);
 
             var response = _mapper.Map<IdeaGetResult>(result);
             return new Response<IdeaGetResult>(response);
@@ -45,14 +45,14 @@ namespace MindKeeper.Api.Controllers
         [HttpGet]
         public async Task<Response<IdeasGetAllResult>> GetAll([FromQuery] IdeasGetAllRequest request)
         {
-            var filter = _mapper.Map<NodeFilter>(request);
+            var filter = _mapper.Map<IdeaFilter>(request);
 
-            var result = await _nodeService.GetAll(filter);
+            var result = await _ideaService.GetAll(filter);
 
-            var nodeDtos = _mapper.Map<List<IdeasGetAllResult.IdeaResponse>>(result);
+            var ideaDtos = _mapper.Map<List<IdeasGetAllResult.IdeaResponse>>(result);
             var response = new IdeasGetAllResult() 
             { 
-                Ideas = nodeDtos 
+                Ideas = ideaDtos 
             };
 
             return new Response<IdeasGetAllResult>(response);
@@ -62,7 +62,7 @@ namespace MindKeeper.Api.Controllers
         public async Task<Response<IdeaCreateResult>> Create([FromBody] IdeaCreateRequest request)
         {
             var userId = User.GetUserId();
-            var result = await _nodeService.Create(
+            var result = await _ideaService.Create(
                 userId,
                 request.Name,
                 request.Descritpion,
@@ -80,7 +80,7 @@ namespace MindKeeper.Api.Controllers
         [HttpPost("Link/Add")]
         public async Task<Response> AddLink([FromBody] IdeaLinkAddRequest request)
         {
-            await _nodeService.CreateLink(request.ParentId, request.ChildId);
+            await _ideaService.CreateLink(request.ParentId, request.ChildId);
 
             return new Response();
         }
@@ -88,7 +88,7 @@ namespace MindKeeper.Api.Controllers
         [HttpDelete("Link/Delete")]
         public async Task<Response> DeleteLink([FromBody] IdeaLinkDeleteRequest request)
         {
-            await _nodeService.DeleteLink(request.ParentId, request.ChildId);
+            await _ideaService.DeleteLink(request.ParentId, request.ChildId);
 
             return new Response();
         }
