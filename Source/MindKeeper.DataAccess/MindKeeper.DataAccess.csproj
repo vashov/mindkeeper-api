@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="PostgreSource\Migrations\Countries\countries.json" />
+    <None Remove="PostgreSource\Migrations\ScientificDomains\scientific_domains.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="PostgreSource\Migrations\Countries\countries.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="PostgreSource\Migrations\ScientificDomains\scientific_domains.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Dapper.SqlBuilder" Version="2.0.78" />
+    <PackageReference Include="Neo4jClient" Version="4.1.20" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MindKeeper.Domain\MindKeeper.Domain.csproj" />
+    <ProjectReference Include="..\MindKeeper.Shared\MindKeeper.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

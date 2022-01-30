@@ -1,8 +1,9 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MindKeeper.Api.Core.Auth;
 using MindKeeper.Api.Core.Exceptions;
-using MindKeeper.Api.Data.Repositories.Users;
-using MindKeeper.Api.Data.Repositories.Users.Models;
+using MindKeeper.Domain.Entities;
+using MindKeeper.Domain.Interfaces;
+using MindKeeper.Shared.Core;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

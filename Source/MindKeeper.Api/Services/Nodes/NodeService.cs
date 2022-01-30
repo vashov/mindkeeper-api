@@ -1,8 +1,8 @@
 ﻿using MindKeeper.Api.Core.Exceptions;
-using MindKeeper.Api.Data.Entities;
-using MindKeeper.Api.Data.Repositories.Nodes;
-using MindKeeper.Api.Data.Repositories.Nodes.Models;
-using MindKeeper.Api.Data.Repositories.Users;
+using MindKeeper.Domain.Entities;
+using MindKeeper.DataAccess.PostgreSource.Repositories;
+using MindKeeper.Domain.Filters;
+using MindKeeper.Domain.Interfaces;
 using MindKeeper.Shared.Extensions;
 using System.Collections.Generic;
 using System.Linq;

@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindKeeper.Api", "MindKeeper.Api\MindKeeper.Api.csproj", "{28771C75-64C9-4850-9C52-FCDC487AC01B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MindKeeper.Api", "MindKeeper.Api\MindKeeper.Api.csproj", "{28771C75-64C9-4850-9C52-FCDC487AC01B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindKeeper.Shared", "MindKeeper.Shared\MindKeeper.Shared.csproj", "{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MindKeeper.Shared", "MindKeeper.Shared\MindKeeper.Shared.csproj", "{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindKeeper.Domain", "MindKeeper.Domain\MindKeeper.Domain.csproj", "{F1B4E376-B14D-49E3-A602-74A7FEBB1CA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindKeeper.DataAccess", "MindKeeper.DataAccess\MindKeeper.DataAccess.csproj", "{96F744A4-F6EC-45E4-9453-23D98E881920}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DCF9883-46F4-48C3-811C-9E9F0C9528EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1B4E376-B14D-49E3-A602-74A7FEBB1CA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1B4E376-B14D-49E3-A602-74A7FEBB1CA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1B4E376-B14D-49E3-A602-74A7FEBB1CA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1B4E376-B14D-49E3-A602-74A7FEBB1CA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96F744A4-F6EC-45E4-9453-23D98E881920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96F744A4-F6EC-45E4-9453-23D98E881920}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96F744A4-F6EC-45E4-9453-23D98E881920}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96F744A4-F6EC-45E4-9453-23D98E881920}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

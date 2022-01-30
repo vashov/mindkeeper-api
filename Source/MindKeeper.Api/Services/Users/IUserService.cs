@@ -1,4 +1,4 @@
-﻿using MindKeeper.Api.Data.Repositories.Users.Models;
+﻿using MindKeeper.Domain.Entities;
 using System.Threading.Tasks;
 
 namespace MindKeeper.Api.Services.Users

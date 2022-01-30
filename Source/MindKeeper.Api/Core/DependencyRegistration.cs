@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MindKeeper.Api.Data.Repositories.Nodes;
-using MindKeeper.Api.Data.Repositories.Users;
+using MindKeeper.DataAccess.PostgreSource.Repositories;
+using MindKeeper.Domain.Interfaces;
 using MindKeeper.Api.Services.Nodes;
 using MindKeeper.Api.Services.Users;
 
