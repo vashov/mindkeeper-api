@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MindKeeper.DataAccess.PostgreSource.Migrations
+namespace MindKeeper.DataAccess.PostgreSource.Seed
 {
     public class DbMigration
     {

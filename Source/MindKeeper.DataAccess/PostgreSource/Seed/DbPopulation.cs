@@ -1,6 +1,6 @@
 ﻿using Dapper;
-using MindKeeper.DataAccess.PostgreSource.Migrations.Countries;
-using MindKeeper.DataAccess.PostgreSource.Migrations.ScientificDomains;
+using MindKeeper.DataAccess.PostgreSource.Seed.Countries;
+using MindKeeper.DataAccess.PostgreSource.Seed.ScientificDomains;
 using MindKeeper.Domain.Constants;
 using MindKeeper.Shared.Core;
 using System;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MindKeeper.DataAccess.PostgreSource.Migrations
+namespace MindKeeper.DataAccess.PostgreSource.Seed
 {
     public static class DbPopulation
     {
@@ -103,7 +103,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Migrations
             if (isCountriesLoaded)
                 return;
 
-            using var fileReader = File.OpenRead(@".\Data\Migrations\Countries\countries.json");
+            using var fileReader = File.OpenRead(@".\SeedData\countries.json");
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var countries = await JsonSerializer.DeserializeAsync<List<CountryModel>>(fileReader, options);
@@ -147,7 +147,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Migrations
             if (isDomainsLoaded)
                 return;
 
-            using var fileReader = File.OpenRead(@".\Data\Migrations\ScientificDomains\scientific_domains.json");
+            using var fileReader = File.OpenRead(@".\SeedData\scientific_domains.json");
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var domains = await JsonSerializer.DeserializeAsync<List<ScientificDomain>>(fileReader, options);

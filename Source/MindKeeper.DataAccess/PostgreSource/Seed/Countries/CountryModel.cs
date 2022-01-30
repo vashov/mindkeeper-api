@@ -1,4 +1,4 @@
-﻿namespace MindKeeper.DataAccess.PostgreSource.Migrations.Countries
+﻿namespace MindKeeper.DataAccess.PostgreSource.Seed.Countries
 {
     internal class CountryModel
     {

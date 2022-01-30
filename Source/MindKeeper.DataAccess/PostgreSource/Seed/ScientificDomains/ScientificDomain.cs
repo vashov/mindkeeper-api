@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace MindKeeper.DataAccess.PostgreSource.Migrations.ScientificDomains
+namespace MindKeeper.DataAccess.PostgreSource.Seed.ScientificDomains
 {
     internal class ScientificDomain
     {

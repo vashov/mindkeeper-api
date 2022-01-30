@@ -13,7 +13,7 @@ using MindKeeper.Api.Core;
 using MindKeeper.Api.Core.Auth;
 using MindKeeper.Api.Core.Middlewares;
 using MindKeeper.Api.Core.OpenApi;
-using MindKeeper.DataAccess.PostgreSource.Migrations;
+using MindKeeper.DataAccess.PostgreSource.Seed;
 using MindKeeper.Shared.Wrappers;
 using Npgsql;
 using System;
