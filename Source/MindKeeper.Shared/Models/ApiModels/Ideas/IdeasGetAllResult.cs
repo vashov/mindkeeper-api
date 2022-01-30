@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MindKeeper.Shared.Models.ApiModels.Nodes
+namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
-    public class NodesGetAllResult
+    public class IdeasGetAllResult
     {
-        public class NodeResponse
+        public class IdeaResponse
         {
             public int Id { get; set; }
             public string Name { get; set; }
@@ -19,6 +19,6 @@ namespace MindKeeper.Shared.Models.ApiModels.Nodes
             public List<int> Children { get; } = new List<int>();
         }
 
-        public List<NodeResponse> Nodes { get; set; }
+        public List<IdeaResponse> Ideas { get; set; }
     }
 }

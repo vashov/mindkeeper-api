@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MindKeeper.DataAccess.PostgreSource.Repositories
 {
-    public class NodeRepository : INodeRepository
+    public class NodeRepository : IIdeaRepository
     {
         private readonly IDbConnection _connection;
 
@@ -20,7 +20,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Repositories
             _connection = connection;
         }
 
-        public async Task<Node> Create(int userId, string name, string descritpion, int typeId, int parentId)
+        public async Task<Idea> Create(int userId, string name, string descritpion, int typeId, int parentId)
         {
             var now = DateTimeOffset.UtcNow;
 
@@ -30,7 +30,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Repositories
                 RETURNING *;
             ";
 
-            var node = await _connection.QuerySingleAsync<Node>(
+            var node = await _connection.QuerySingleAsync<Idea>(
                 createNodeCommand,
                 new { userId, name, descritpion, typeId, parentId, now });
 
@@ -52,18 +52,18 @@ namespace MindKeeper.DataAccess.PostgreSource.Repositories
             return node;
         }
 
-        public async Task<Node> Get(long id)
+        public async Task<Idea> Get(long id)
         {
             const string getQuery = "SELECT * FROM nodes WHERE id = @id";
 
-            var node = await _connection.QuerySingleOrDefaultAsync<Node>(getQuery, new { id });
+            var node = await _connection.QuerySingleOrDefaultAsync<Idea>(getQuery, new { id });
 
             // TODO: fill children and parents;
 
             return node;
         }
 
-        public async Task<List<Node>> GetAll(NodeFilter filter)
+        public async Task<List<Idea>> GetAll(NodeFilter filter)
         {
             const string getAllQuery = @"
                 SELECT n.*, nnc.child_id, nnp.parent_id FROM nodes n 
@@ -100,7 +100,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Repositories
 
             // TODO: mapping action many-to-many
 
-            var nodes = await _connection.QueryAsync<Node>(
+            var nodes = await _connection.QueryAsync<Idea>(
                 template.RawSql,
                 template.Parameters);
 

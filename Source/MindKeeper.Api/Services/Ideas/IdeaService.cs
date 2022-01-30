@@ -1,6 +1,5 @@
 ﻿using MindKeeper.Api.Core.Exceptions;
 using MindKeeper.Domain.Entities;
-using MindKeeper.DataAccess.PostgreSource.Repositories;
 using MindKeeper.Domain.Filters;
 using MindKeeper.Domain.Interfaces;
 using MindKeeper.Shared.Extensions;
@@ -8,20 +7,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MindKeeper.Api.Services.Nodes
+namespace MindKeeper.Api.Services.Ideas
 {
-    public class NodeService : INodeService
+    public class IdeaService : IIdeaService
     {
-        private readonly INodeRepository _nodeRepository;
+        private readonly IIdeaRepository _nodeRepository;
         private readonly IUserRepository _userRepository;
 
-        public NodeService(INodeRepository nodeRepository, IUserRepository userRepository)
+        public IdeaService(IIdeaRepository nodeRepository, IUserRepository userRepository)
         {
             _nodeRepository = nodeRepository;
             _userRepository = userRepository;
         }
 
-        public async Task<Node> Create(int userId, string name, string descritpion, int typeId, int parentId)
+        public async Task<Idea> Create(int userId, string name, string descritpion, int typeId, int parentId)
         {
             if (_userRepository.Get(userId) == null)
                 throw new ApiException("Invalid user id.");
@@ -38,7 +37,7 @@ namespace MindKeeper.Api.Services.Nodes
             return node;
         }
 
-        public async Task<Node> Get(long id)
+        public async Task<Idea> Get(long id)
         {
             var node = await _nodeRepository.Get(id);
             if (node == null)
@@ -47,7 +46,7 @@ namespace MindKeeper.Api.Services.Nodes
             return node;
         }
 
-        public async Task<List<Node>> GetAll(NodeFilter filter)
+        public async Task<List<Idea>> GetAll(NodeFilter filter)
         {
             var nodes = await _nodeRepository.GetAll(filter);
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MindKeeper.Domain.Entities
+namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
-    public class Node
+    public class IdeaGetResult
     {
         public int Id { get; set; }
         public string Name { get; set; }

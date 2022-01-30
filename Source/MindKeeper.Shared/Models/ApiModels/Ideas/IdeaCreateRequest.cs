@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MindKeeper.Shared.Models.ApiModels.Nodes
+namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
-    public class NodeCreateRequest
+    public class IdeaCreateRequest
     {
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; }

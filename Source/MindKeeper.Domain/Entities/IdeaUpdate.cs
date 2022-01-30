@@ -2,12 +2,12 @@
 
 namespace MindKeeper.Domain.Entities
 {
-    public class NodeUpdate
+    public class IdeaUpdate
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int NodeId { get; set; }
+        public int IdeaId { get; set; }
         public int CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
     }

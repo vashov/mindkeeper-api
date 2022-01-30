@@ -13,8 +13,10 @@ using MindKeeper.Api.Core;
 using MindKeeper.Api.Core.Auth;
 using MindKeeper.Api.Core.Middlewares;
 using MindKeeper.Api.Core.OpenApi;
+using MindKeeper.DataAccess.Neo4jSource;
 using MindKeeper.DataAccess.PostgreSource.Seed;
 using MindKeeper.Shared.Wrappers;
+using Neo4j.Driver;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -39,6 +41,12 @@ namespace MindKeeper.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IDbConnection>((sp) => new NpgsqlConnection(_dbConnectionString));
+
+            services.AddSingleton<IDriver>(GraphDatabase.Driver(
+                Neo4jSettings.Uri,
+                AuthTokens.Basic(Neo4jSettings.Username, Neo4jSettings.Password)
+                )
+            );
 
             services.AddRepositories();
             services.AddBusinessLogicServices();

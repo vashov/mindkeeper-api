@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MindKeeper.Shared.Models.ApiModels.Nodes
+namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
-    public class NodeLinkAddRequest
+    public class IdeaLinkDeleteRequest
     {
         [Required]
         public int ParentId { get; set; }

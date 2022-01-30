@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MindKeeper.DataAccess.PostgreSource.Repositories;
-using MindKeeper.Domain.Interfaces;
-using MindKeeper.Api.Services.Nodes;
+using MindKeeper.Api.Services.Ideas;
 using MindKeeper.Api.Services.Users;
+using MindKeeper.DataAccess.Neo4jSource.Repositories;
+using MindKeeper.Domain.Interfaces;
 
 namespace MindKeeper.Api.Core
 {
@@ -11,13 +11,13 @@ namespace MindKeeper.Api.Core
         public static void AddBusinessLogicServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<INodeService, NodeService>();
+            services.AddScoped<IIdeaService, IdeaService>();
         }
 
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<INodeRepository, NodeRepository>();
+            //services.AddScoped<INodeRepository, NodeRepository>();
         }
     }
 }

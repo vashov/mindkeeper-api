@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace MindKeeper.Shared.Models.ApiModels.Nodes
+namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
-    public class NodesGetAllRequest
+    public class IdeasGetAllRequest
     {
         /// <summary>
         /// Filter by user
@@ -10,18 +10,18 @@ namespace MindKeeper.Shared.Models.ApiModels.Nodes
         public int UserId { get; set; }
 
         /// <summary>
-        /// Filter by nodes whose name starts with this parameter.
+        /// Filter by ideas whose name starts with this parameter.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Filter by parent node.
+        /// Filter by parent idea.
         /// </summary>
         public int ParentId { get; set; }
 
         /// <summary>
-        /// Filter by selected node's id.
+        /// Filter by selected idea's id.
         /// </summary>
-        public List<int> Nodes { get; set; }
+        public List<int> Ideas { get; set; }
     }
 }

@@ -6,13 +6,13 @@ namespace MindKeeper.Api.Core
     {
         public MappingProfile()
         {
-            CreateMap<MindKeeper.Domain.Entities.Node,
-                Shared.Models.ApiModels.Nodes.NodeGetResult>();
+            CreateMap<MindKeeper.Domain.Entities.Idea,
+                Shared.Models.ApiModels.Ideas.IdeaGetResult>();
 
-            CreateMap<MindKeeper.Domain.Entities.Node,
-                Shared.Models.ApiModels.Nodes.NodesGetAllResult.NodeResponse>();
+            CreateMap<MindKeeper.Domain.Entities.Idea,
+                Shared.Models.ApiModels.Ideas.IdeasGetAllResult.IdeaResponse>();
 
-            CreateMap<Shared.Models.ApiModels.Nodes.NodesGetAllRequest,
+            CreateMap<Shared.Models.ApiModels.Ideas.IdeasGetAllRequest,
                 MindKeeper.Domain.Filters.NodeFilter>();
         }
     }
