@@ -6,5 +6,6 @@
         public string Mail { get; set; }
         public string NormalizedMail { get; set; }
         public string PasswordHash { get; set; }
+        public string CreatedAt { get; set; }
     }
 }

@@ -1,33 +1,82 @@
 ﻿using MindKeeper.Domain.Entities;
 using MindKeeper.Domain.Interfaces;
+using Neo4jClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MindKeeper.DataAccess.Neo4jSource.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public Task<User> Create(string mail, string passwordHash)
+        private readonly IGraphClient _client;
+
+        public UserRepository(IGraphClient client)
         {
-            throw new NotImplementedException();
+            _client = client;
         }
 
-        public Task<User> Get(int id)
+        public async Task<User> Create(string mail, string passwordHash)
         {
-            throw new NotImplementedException();
+            string normalizedMail = mail.ToLower();
+
+            var parameters = new
+            {
+                Mail = mail,
+                NormalizedMail = normalizedMail,
+                PasswordHash = passwordHash,
+                CreatedAt = DateTimeOffset.UtcNow
+            };
+
+            var results = await _client.Cypher
+                .Create("(user:User {parameters})")
+                .WithParam("parameters", parameters)
+                .Return(user => user.As<User>())
+                .ResultsAsync;
+
+            return results.FirstOrDefault();
         }
 
-        public Task<User> Get(string mail, bool isNormalizedSearch = false)
+        public async Task<User> Get(int id)
         {
-            throw new NotImplementedException();
+            var results = await _client.Cypher
+                .Match("(user:User)")
+                .Where($"ID(user)={id}")
+                .Return(user => user.As<User>())
+                .ResultsAsync;
+
+            return results.FirstOrDefault();
         }
 
-        public Task<List<User>> GetAll()
+        public async Task<User> Get(string mail, bool isNormalizedSearch = false)
         {
-            throw new NotImplementedException();
+            var query = _client.Cypher
+                .Match("(user:User {parameters})");
+
+            if (isNormalizedSearch)
+            {
+                var normalizedMail = mail.ToLower();
+                query = query.WithParam("parameters", new { NormalizedMail = normalizedMail });
+            }
+            else
+            {
+                query = query.WithParam("parameters", new { Mail = mail });
+            }
+
+
+            var result = await query.Return(user => user.As<User>()).ResultsAsync;
+            return result.FirstOrDefault();
+        }
+
+        public async Task<List<User>> GetAll()
+        {
+            var results = await _client.Cypher
+                .Match("(user:User)")
+                .Return(user => user.As<User>())
+                .ResultsAsync;
+
+            return results.ToList();
         }
     }
 }

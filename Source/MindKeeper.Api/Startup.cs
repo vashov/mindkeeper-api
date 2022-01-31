@@ -16,7 +16,7 @@ using MindKeeper.Api.Core.OpenApi;
 using MindKeeper.DataAccess.Neo4jSource;
 using MindKeeper.DataAccess.PostgreSource.Seed;
 using MindKeeper.Shared.Wrappers;
-using Neo4j.Driver;
+using Neo4jClient;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -42,11 +42,15 @@ namespace MindKeeper.Api
         {
             services.AddTransient<IDbConnection>((sp) => new NpgsqlConnection(_dbConnectionString));
 
-            services.AddSingleton<IDriver>(GraphDatabase.Driver(
-                Neo4jSettings.Uri,
-                AuthTokens.Basic(Neo4jSettings.Username, Neo4jSettings.Password)
-                )
-            );
+            services.AddScoped<IGraphClient, GraphClient>(serviceProvider =>
+            {
+                var client = new GraphClient(
+                    new Uri(Neo4jSettings.Uri),
+                    Neo4jSettings.Username,
+                    Neo4jSettings.Password);
+                client.ConnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                return client;
+            });
 
             services.AddRepositories();
             services.AddBusinessLogicServices();
