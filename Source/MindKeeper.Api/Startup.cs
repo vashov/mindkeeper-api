@@ -16,7 +16,7 @@ using MindKeeper.Api.Core.OpenApi;
 using MindKeeper.DataAccess.Neo4jSource;
 using MindKeeper.DataAccess.PostgreSource.Seed;
 using MindKeeper.Shared.Wrappers;
-using Neo4jClient;
+using Neo4j.Driver;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -42,15 +42,17 @@ namespace MindKeeper.Api
         {
             services.AddTransient<IDbConnection>((sp) => new NpgsqlConnection(_dbConnectionString));
 
-            services.AddScoped<IGraphClient, GraphClient>(serviceProvider =>
-            {
-                var client = new GraphClient(
-                    new Uri(Neo4jSettings.Uri),
-                    Neo4jSettings.Username,
-                    Neo4jSettings.Password);
-                client.ConnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                return client;
-            });
+            services.AddSingleton<IDriver>(sp => GraphDatabase.Driver(Neo4jSettings.Uri,
+                    AuthTokens.Basic(Neo4jSettings.Username, Neo4jSettings.Password)));
+            //services.AddScoped<IGraphClient, GraphClient>(serviceProvider =>
+            //{
+            //    var client = new GraphClient(
+            //        new Uri(Neo4jSettings.Uri),
+            //        Neo4jSettings.Username,
+            //        Neo4jSettings.Password);
+            //    client.ConnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            //    return client;
+            //});
 
             services.AddRepositories();
             services.AddBusinessLogicServices();
@@ -130,7 +132,7 @@ namespace MindKeeper.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider services)
         {
-            InitDatabase(services);
+            //InitDatabase(services);
 
             //if (env.IsDevelopment())
             //{

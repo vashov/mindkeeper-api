@@ -17,7 +17,7 @@ namespace MindKeeper.Api.Core
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            //services.AddScoped<IIdeaRepository, IdeaRepository>();
+            services.AddScoped<IIdeaRepository, IdeaRepository>();
         }
     }
 }
