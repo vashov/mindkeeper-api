@@ -24,6 +24,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
 
             var parameters = new
             {
+                Id = Guid.NewGuid(),
                 Mail = mail,
                 NormalizedMail = normalizedMail,
                 PasswordHash = passwordHash,
