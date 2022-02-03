@@ -1,8 +1,10 @@
-﻿namespace MindKeeper.Domain.Entities
+﻿using System;
+
+namespace MindKeeper.Domain.Entities
 {
     public class Subdomain
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }

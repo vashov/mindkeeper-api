@@ -1,7 +1,9 @@
-﻿namespace MindKeeper.Shared.Models.ApiModels.Ideas
+﻿using System;
+
+namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
     public class IdeaCreateResult
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

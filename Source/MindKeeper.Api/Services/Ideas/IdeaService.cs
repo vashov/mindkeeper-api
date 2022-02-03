@@ -3,6 +3,7 @@ using MindKeeper.Domain.Entities;
 using MindKeeper.Domain.Filters;
 using MindKeeper.Domain.Interfaces;
 using MindKeeper.Shared.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace MindKeeper.Api.Services.Ideas
             _userRepository = userRepository;
         }
 
-        public async Task<Idea> Create(int userId, string name, string descritpion, int typeId, int parentId)
+        public async Task<Idea> Create(Guid userId, string name, string descritpion, Guid parentId)
         {
             if (_userRepository.Get(userId) == null)
                 throw new ApiException("Invalid user id.");
@@ -32,12 +33,12 @@ namespace MindKeeper.Api.Services.Ideas
 
             // TODO: validate typeId.
 
-            var idea = await _ideaRepository.Create(userId, name, descritpion, typeId, parentId);
+            var idea = await _ideaRepository.Create(userId, name, descritpion, parentId);
 
             return idea;
         }
 
-        public async Task<Idea> Get(long id)
+        public async Task<Idea> Get(Guid id)
         {
             var idea = await _ideaRepository.Get(id);
             if (idea == null)
@@ -53,7 +54,7 @@ namespace MindKeeper.Api.Services.Ideas
             return ideas;
         }
 
-        public async Task CreateLink(int parentId, int childId)
+        public async Task CreateLink(Guid parentId, Guid childId)
         {
             await ValidateIdeasAsFutureChildAndParent(parentId, childId);
 
@@ -63,7 +64,7 @@ namespace MindKeeper.Api.Services.Ideas
                     $"Connection of idea (parent) {parentId} with idea (child) {childId} wasn't created.");
         }
 
-        public async Task DeleteLink(int parentId, int childId)
+        public async Task DeleteLink(Guid parentId, Guid childId)
         {
             await ValidateIdeasAsFutureChildAndParent(parentId, childId);
 
@@ -85,20 +86,20 @@ namespace MindKeeper.Api.Services.Ideas
                 throw new AppValidationException($"Description length should be > 0 and <= {descriptionMaxLen}.");
         }
 
-        private async Task ValidateIdeasExist(params long[] ideas)
+        private async Task ValidateIdeasExist(params Guid[] ideas)
         {
             var filter = new IdeaFilter
             {
                 Ideas = ideas.ToList()
             };
             var ideasResult = await _ideaRepository.GetAll(filter);
-            List<long> invalidIdeas = ideas.Except(ideasResult.Select(n => n.Id)).ToList();
+            List<Guid> invalidIdeas = ideas.Except(ideasResult.Select(n => n.Id)).ToList();
 
             if (invalidIdeas.HasValues())
                 throw new ApiException($"Invalid ideas with id {string.Join(",", invalidIdeas)}.");
         }
 
-        private async Task ValidateIdeasAsFutureChildAndParent(int parentId, int childId)
+        private async Task ValidateIdeasAsFutureChildAndParent(Guid parentId, Guid childId)
         {
             if (parentId == childId)
                 throw new AppValidationException("Ideas should have different ID.");

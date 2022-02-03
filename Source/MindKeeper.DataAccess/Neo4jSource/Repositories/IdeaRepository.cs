@@ -11,22 +11,22 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
 {
     public class IdeaRepository : IIdeaRepository
     {
-        public Task<Idea> Create(int userId, string name, string descritpion, int typeId, int parentId)
+        public Task<Idea> Create(Guid userId, string name, string descritpion, Guid parentId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> CreateLink(int parentId, int childId)
+        public Task<bool> CreateLink(Guid parentId, Guid childId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteLink(int parentId, int childId)
+        public Task<bool> DeleteLink(Guid parentId, Guid childId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Idea> Get(long id)
+        public Task<Idea> Get(Guid id)
         {
             throw new NotImplementedException();
         }

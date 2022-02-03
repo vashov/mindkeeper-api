@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
     public class IdeaLinkAddRequest
     {
         [Required]
-        public int ParentId { get; set; }
+        public Guid ParentId { get; set; }
 
         [Required]
-        public int ChildId { get; set; }
+        public Guid ChildId { get; set; }
     }
 }

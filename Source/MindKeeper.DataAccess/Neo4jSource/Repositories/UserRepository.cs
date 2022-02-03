@@ -49,16 +49,20 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             return results.FirstOrDefault();
         }
 
-        public async Task<User> Get(long id)
+        public async Task<User> Get(Guid id)
         {
+            var parameters = new
+            {
+                Id = id
+            };
+
             string query = $@"
-                    MATCH (user:User)
-                    WHERE ID(user) = {id}
+                    MATCH (user:User {{{parameters.AsProperties()}}})
                     RETURN user
                 ";
 
             using var session = _client.AsyncSession();
-            var cursor = await session.RunAsync(query);
+            var cursor = await session.RunAsync(query, parameters);
 
             var results = await cursor.ToListAsync<User>(r =>
             {

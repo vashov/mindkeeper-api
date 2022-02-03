@@ -9,6 +9,7 @@ using MindKeeper.Domain.Constants;
 using MindKeeper.Domain.Filters;
 using MindKeeper.Shared.Models.ApiModels.Ideas;
 using MindKeeper.Shared.Wrappers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace MindKeeper.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<Response<IdeaGetResult>> Get([FromRoute] int id)
+        public async Task<Response<IdeaGetResult>> Get([FromRoute] Guid id)
         {
             var result = await _ideaService.Get(id);
 
@@ -66,7 +67,6 @@ namespace MindKeeper.Api.Controllers
                 userId,
                 request.Name,
                 request.Descritpion,
-                (int)NodeTypeEnum.Common,
                 request.ParentId);
 
             var response = new IdeaCreateResult()
