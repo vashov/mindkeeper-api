@@ -32,7 +32,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Repositories
             return user;
         }
 
-        public async Task<User> Get(int id)
+        public async Task<User> Get(long id)
         {
             const string query = "SELECT * FROM users WHERE id = @id;";
 

@@ -41,7 +41,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Repositories
 
             if (parentId != default)
             {
-                int childId = idea.Id;
+                long childId = idea.Id;
                 await _connection.ExecuteAsync(
                     createParentChildCommand,
                     new { parentId, childId });

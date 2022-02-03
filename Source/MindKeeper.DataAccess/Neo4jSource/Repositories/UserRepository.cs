@@ -1,9 +1,11 @@
-﻿using MindKeeper.Domain.Entities;
+﻿using MindKeeper.DataAccess.Neo4jSource.Extensions;
+using MindKeeper.Domain.Entities;
 using MindKeeper.Domain.Interfaces;
 using Neo4j.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MindKeeper.DataAccess.Neo4jSource.Repositories
@@ -31,8 +33,8 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
 
             using var session = _client.AsyncSession();
 
-            string query = @"
-                CREATE (user:User {Mail: $Mail, NormalizedMail: $NormalizedMail, PasswordHash: $PasswordHash, CreatedAt: $CreatedAt})
+            string query = $@"
+                CREATE (user:User {{{parameters.AsProperties()}}})
                 RETURN user
             ";
             var cursor = await session.RunAsync(query, parameters);
@@ -40,15 +42,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             var results = await cursor.ToListAsync<User>(r =>
             {
                 var node = r["user"].As<INode>();
-
-                var user = new User
-                {
-                    Id = node.Properties.ContainsKey("Id") ? node.Properties["Id"].As<int>() : default,
-                    Mail = node.Properties.ContainsKey("Mail") ? node.Properties["Mail"].As<string>() : default,
-                    NormalizedMail = node.Properties.ContainsKey("NormalizedMail") ? node.Properties["NormalizedMail"].As<string>() : default,
-                    CreatedAt = node.Properties.ContainsKey("CreatedAt") ? node.Properties["CreatedAt"].As<DateTimeOffset>() : default,
-                };
-
+                var user = node.AsEntity<User>();
                 return user;
             });
 
@@ -61,7 +55,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             return results.FirstOrDefault();
         }
 
-        public async Task<User> Get(int id)
+        public async Task<User> Get(long id)
         {
             //var results = await _client.Cypher
             //    .Match("(user:User)")
@@ -85,34 +79,23 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             {
                 var normalizedMail = mail.ToLower();
                 parameters = new { NormalizedMail = normalizedMail };
-                query = @"
-                    MATCH (user:User {NormalizedMail: $NormalizedMail})
-                    RETURN user
-                ";
             }
             else
             {
                 parameters = new { Mail = mail };
-                query = @"
-                    MATCH (user:User {Mail: $Mail})
+            }
+
+            query = $@"
+                    MATCH (user:User {{{parameters.AsProperties()}}})
                     RETURN user
                 ";
-            }
 
             var cursor = await session.RunAsync(query, parameters);
 
             var results = await cursor.ToListAsync<User>(r =>
             {
                 var node = r["user"].As<INode>();
-
-                var user = new User
-                {
-                    Id = node.Properties.ContainsKey("Id") ? node.Properties["Id"].As<int>() : default,
-                    Mail = node.Properties.ContainsKey("Mail") ? node.Properties["Mail"].As<string>() : default,
-                    NormalizedMail = node.Properties.ContainsKey("NormalizedMail") ? node.Properties["NormalizedMail"].As<string>() : default,
-                    CreatedAt = node.Properties.ContainsKey("CreatedAt") ? node.Properties["CreatedAt"].As<DateTimeOffset>() : default,
-                };
-
+                var user = node.AsEntity<User>();
                 return user;
             });
 

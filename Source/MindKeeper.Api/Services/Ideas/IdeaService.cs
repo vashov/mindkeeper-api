@@ -85,14 +85,14 @@ namespace MindKeeper.Api.Services.Ideas
                 throw new AppValidationException($"Description length should be > 0 and <= {descriptionMaxLen}.");
         }
 
-        private async Task ValidateIdeasExist(params int[] ideas)
+        private async Task ValidateIdeasExist(params long[] ideas)
         {
             var filter = new IdeaFilter
             {
                 Ideas = ideas.ToList()
             };
             var ideasResult = await _ideaRepository.GetAll(filter);
-            List<int> invalidIdeas = ideas.Except(ideasResult.Select(n => n.Id)).ToList();
+            List<long> invalidIdeas = ideas.Except(ideasResult.Select(n => n.Id)).ToList();
 
             if (invalidIdeas.HasValues())
                 throw new ApiException($"Invalid ideas with id {string.Join(",", invalidIdeas)}.");
