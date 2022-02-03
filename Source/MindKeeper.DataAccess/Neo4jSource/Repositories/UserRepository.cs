@@ -5,7 +5,6 @@ using Neo4j.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MindKeeper.DataAccess.Neo4jSource.Repositories
@@ -31,12 +30,13 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 CreatedAt = DateTimeOffset.UtcNow
             };
 
-            using var session = _client.AsyncSession();
 
             string query = $@"
                 CREATE (user:User {{{parameters.AsProperties()}}})
                 RETURN user
             ";
+
+            using var session = _client.AsyncSession();
             var cursor = await session.RunAsync(query, parameters);
 
             var results = await cursor.ToListAsync<User>(r =>
@@ -46,33 +46,32 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 return user;
             });
 
-                //var results = await _client.Cypher
-                //.Create("(user:User {parameters})")
-                //.WithParam("parameters", parameters)
-                //.Return(user => user.As<User>())
-                //.ResultsAsync;
-
             return results.FirstOrDefault();
         }
 
         public async Task<User> Get(long id)
         {
-            //var results = await _client.Cypher
-            //    .Match("(user:User)")
-            //    .Where($"ID(user)={id}")
-            //    .Return(user => user.As<User>())
-            //    .ResultsAsync;
+            string query = $@"
+                    MATCH (user:User)
+                    WHERE ID(user) = {id}
+                    RETURN user
+                ";
 
-            //return results.FirstOrDefault();
+            using var session = _client.AsyncSession();
+            var cursor = await session.RunAsync(query);
 
-            return null;
+            var results = await cursor.ToListAsync<User>(r =>
+            {
+                var node = r["user"].As<INode>();
+                var user = node.AsEntity<User>();
+                return user;
+            });
+
+            return results.FirstOrDefault();
         }
 
         public async Task<User> Get(string mail, bool isNormalizedSearch = false)
         {
-            using var session = _client.AsyncSession();
-
-            string query;
             object parameters;
 
             if (isNormalizedSearch)
@@ -85,11 +84,12 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 parameters = new { Mail = mail };
             }
 
-            query = $@"
+            string query = $@"
                     MATCH (user:User {{{parameters.AsProperties()}}})
                     RETURN user
                 ";
 
+            using var session = _client.AsyncSession();
             var cursor = await session.RunAsync(query, parameters);
 
             var results = await cursor.ToListAsync<User>(r =>
@@ -99,33 +99,27 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 return user;
             });
 
-            //var query = _client.Cypher
-            //    .Match("(user:User {parameters})");
-
-            //if (isNormalizedSearch)
-            //{
-            //    var normalizedMail = mail.ToLower();
-            //    query = query.WithParam("parameters", new { NormalizedMail = normalizedMail });
-            //}
-            //else
-            //{
-            //    query = query.WithParam("parameters", new { Mail = mail });
-            //}
-
-
-            //var result = await query.Return(user => user.As<User>()).ResultsAsync;
             return results.FirstOrDefault();
         }
 
         public async Task<List<User>> GetAll()
         {
-            //var results = await _client.Cypher
-            //    .Match("(user:User)")
-            //    .Return(user => user.As<User>())
-            //    .ResultsAsync;
+            string query = $@"
+                    MATCH (user:User)
+                    RETURN user
+                ";
 
-            //return results.ToList();
-            return null;
+            using var session = _client.AsyncSession();
+            var cursor = await session.RunAsync(query);
+
+            var results = await cursor.ToListAsync<User>(r =>
+            {
+                var node = r["user"].As<INode>();
+                var user = node.AsEntity<User>();
+                return user;
+            });
+
+            return results;
         }
     }
 }
