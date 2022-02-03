@@ -1,6 +1,5 @@
 ﻿using Dapper;
-using MindKeeper.DataAccess.PostgreSource.Seed.Countries;
-using MindKeeper.DataAccess.PostgreSource.Seed.ScientificDomains;
+using MindKeeper.DataAccess.SeedData.Models;
 using MindKeeper.Domain.Constants;
 using MindKeeper.Shared.Core;
 using System;
@@ -150,7 +149,7 @@ namespace MindKeeper.DataAccess.PostgreSource.Seed
             using var fileReader = File.OpenRead(@".\SeedData\scientific_domains.json");
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var domains = await JsonSerializer.DeserializeAsync<List<ScientificDomain>>(fileReader, options);
+            var domains = await JsonSerializer.DeserializeAsync<List<ScientificDomainModel>>(fileReader, options);
 
             var domainTypeId = (int)NodeTypeEnum.Domain;
             var subdomainTypeId = (int)NodeTypeEnum.Subdomain;

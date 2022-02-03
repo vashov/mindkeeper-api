@@ -1,13 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="PostgreSource\Seed\Countries\countries.json" />
-    <None Remove="PostgreSource\Seed\ScientificDomains\scientific_domains.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="SeedData\countries.json">
@@ -25,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Dapper.SqlBuilder" Version="2.0.78" />
-    <PackageReference Include="Neo4j.Driver" Version="4.4.0" />
+    <PackageReference Include="Neo4j.Driver.Extensions" Version="1.0.14" />
   </ItemGroup>
 
   <ItemGroup>

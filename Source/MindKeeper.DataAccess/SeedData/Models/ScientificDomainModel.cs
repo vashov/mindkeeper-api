@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace MindKeeper.DataAccess.PostgreSource.Seed.ScientificDomains
+namespace MindKeeper.DataAccess.SeedData.Models
 {
-    internal class ScientificDomain
+    internal class ScientificDomainModel
     {
         [JsonPropertyName("domain")]
         public string Domain { get; set; }

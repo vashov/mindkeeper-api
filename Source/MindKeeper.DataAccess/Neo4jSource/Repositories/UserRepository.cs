@@ -2,6 +2,7 @@
 using MindKeeper.Domain.Entities;
 using MindKeeper.Domain.Interfaces;
 using Neo4j.Driver;
+using Neo4j.Driver.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,6 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 CreatedAt = DateTimeOffset.UtcNow
             };
 
-
             string query = $@"
                 CREATE (user:User {{{parameters.AsProperties()}}})
                 RETURN user
@@ -43,7 +43,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             var results = await cursor.ToListAsync<User>(r =>
             {
                 var node = r["user"].As<INode>();
-                var user = node.AsEntity<User>();
+                var user = node.ToObject<User>();
                 return user;
             });
 
@@ -68,7 +68,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             var results = await cursor.ToListAsync<User>(r =>
             {
                 var node = r["user"].As<INode>();
-                var user = node.AsEntity<User>();
+                var user = node.ToObject<User>();
                 return user;
             });
 
@@ -100,7 +100,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             var results = await cursor.ToListAsync<User>(r =>
             {
                 var node = r["user"].As<INode>();
-                var user = node.AsEntity<User>();
+                var user = node.ToObject<User>();
                 return user;
             });
 
@@ -120,7 +120,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             var results = await cursor.ToListAsync<User>(r =>
             {
                 var node = r["user"].As<INode>();
-                var user = node.AsEntity<User>();
+                var user = node.ToObject<User>();
                 return user;
             });
 
