@@ -1,6 +1,5 @@
 ﻿using MindKeeper.Domain.Entities;
 using MindKeeper.Domain.Interfaces.Ideas;
-using MindKeeper.Domain.Interfaces.Ideas;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

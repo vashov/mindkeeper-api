@@ -21,14 +21,14 @@ namespace MindKeeper.Api.Services.Ideas
             _userRepository = userRepository;
         }
 
-        public async Task<Idea> Create(Guid userId, string name, string descritpion, Guid parentId)
+        public async Task<Idea> Create(Guid userId, string name, string descritpion, Guid? parentId)
         {
             if (_userRepository.Get(userId) == null)
                 throw new ApiException("Invalid user id.");
 
             ValidateNameAndDescription(name, descritpion);
 
-            if (parentId != default && (await _ideaRepository.Get(parentId)) == null)
+            if (parentId.HasValue && (await _ideaRepository.Get(parentId.Value)) == null)
                 throw new ApiException("Invalid parent idea id.");
 
             // TODO: validate typeId.
