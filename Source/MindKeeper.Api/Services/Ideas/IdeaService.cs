@@ -31,7 +31,7 @@ namespace MindKeeper.Api.Services.Ideas
             if (parentId.HasValue && (await _ideaRepository.Get(parentId.Value)) == null)
                 throw new ApiException("Invalid parent idea id.");
 
-            // TODO: validate typeId.
+            // TODO: validate countryId, subdomainId, domainId.
 
             var ideaCreateModel = new IdeaCreateModel
             {
