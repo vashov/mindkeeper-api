@@ -3,11 +3,11 @@
     internal static class Relationship
     {
         // User
-        public const string CREATES_IDEA = nameof(CREATES_IDEA);
-        public const string ADDS_TO_FAVORITES = nameof(ADDS_TO_FAVORITES);
-        public const string CREATES_IDEA_UPDATE = nameof(CREATES_IDEA_UPDATE);
-        public const string UPVOTES_IDEA_UPDATE = nameof(UPVOTES_IDEA_UPDATE);
-        public const string DOWNVOTES_IDEA_UPDATE = nameof(DOWNVOTES_IDEA_UPDATE);
+        public const string CREATED_IDEA = nameof(CREATED_IDEA);
+        public const string ADDED_TO_FAVORITES = nameof(ADDED_TO_FAVORITES);
+        public const string CREATED_IDEA_UPDATE = nameof(CREATED_IDEA_UPDATE);
+        public const string UPVOTED_IDEA_UPDATE = nameof(UPVOTED_IDEA_UPDATE);
+        public const string DOWNVOTED_IDEA_UPDATE = nameof(DOWNVOTED_IDEA_UPDATE);
         public const string INTERESTED_IN_SUBDOMAIN = nameof(INTERESTED_IN_SUBDOMAIN);
         public const string HAS_ACHIEVEMENT = nameof(HAS_ACHIEVEMENT);
 

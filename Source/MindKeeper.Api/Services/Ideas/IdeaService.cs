@@ -1,6 +1,6 @@
 ﻿using MindKeeper.Api.Core.Exceptions;
 using MindKeeper.Domain.Entities;
-using MindKeeper.Domain.Filters;
+using MindKeeper.Domain.Interfaces.Ideas;
 using MindKeeper.Domain.Interfaces;
 using MindKeeper.Shared.Extensions;
 using System;
@@ -33,7 +33,15 @@ namespace MindKeeper.Api.Services.Ideas
 
             // TODO: validate typeId.
 
-            var idea = await _ideaRepository.Create(userId, name, descritpion, parentId);
+            var ideaCreateModel = new IdeaCreateModel
+            {
+                UserId = userId,
+                Name = name,
+                Description = descritpion,
+                ParentIdeaId = parentId
+            };
+
+            var idea = await _ideaRepository.Create(ideaCreateModel);
 
             return idea;
         }
@@ -47,7 +55,7 @@ namespace MindKeeper.Api.Services.Ideas
             return idea;
         }
 
-        public async Task<List<Idea>> GetAll(IdeaFilter filter)
+        public async Task<List<Idea>> GetAll(IdeaGetAllModel filter)
         {
             var ideas = await _ideaRepository.GetAll(filter);
 
@@ -88,7 +96,7 @@ namespace MindKeeper.Api.Services.Ideas
 
         private async Task ValidateIdeasExist(params Guid[] ideas)
         {
-            var filter = new IdeaFilter
+            var filter = new IdeaGetAllModel
             {
                 Ideas = ideas.ToList()
             };

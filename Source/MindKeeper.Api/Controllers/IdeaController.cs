@@ -6,7 +6,7 @@ using MindKeeper.Api.Core.Auth;
 using MindKeeper.Api.Core.Routing;
 using MindKeeper.Api.Services.Ideas;
 using MindKeeper.Domain.Constants;
-using MindKeeper.Domain.Filters;
+using MindKeeper.Domain.Interfaces.Ideas;
 using MindKeeper.Shared.Models.ApiModels.Ideas;
 using MindKeeper.Shared.Wrappers;
 using System;
@@ -46,7 +46,7 @@ namespace MindKeeper.Api.Controllers
         [HttpGet]
         public async Task<Response<IdeasGetAllResult>> GetAll([FromQuery] IdeasGetAllRequest request)
         {
-            var filter = _mapper.Map<IdeaFilter>(request);
+            var filter = _mapper.Map<IdeaGetAllModel>(request);
 
             var result = await _ideaService.GetAll(filter);
 
