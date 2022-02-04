@@ -9,8 +9,13 @@ namespace MindKeeper.Api.Core.Exceptions
         {
             Errors = new List<string>();
         }
-        public List<string> Errors { get; }
-        public AppValidationException(params string[] failures)
+
+        public AppValidationException(string error) : base(error)
+        {
+            Errors = new List<string>();
+        }
+
+        public AppValidationException(List<string> failures)
             : this()
         {
             foreach (var failure in failures)
@@ -18,6 +23,8 @@ namespace MindKeeper.Api.Core.Exceptions
                 Errors.Add(failure);
             }
         }
+
+        public List<string> Errors { get; }
 
     }
 }
