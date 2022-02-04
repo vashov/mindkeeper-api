@@ -1,5 +1,4 @@
-﻿using MindKeeper.DataAccess.Neo4jSource.Extensions;
-using MindKeeper.DataAccess.Neo4jSource.Relationships;
+﻿using MindKeeper.DataAccess.Neo4jSource.Relationships;
 using MindKeeper.DataAccess.Neo4jSource.Tokens;
 using MindKeeper.Domain.Entities;
 using MindKeeper.Domain.Interfaces;
@@ -42,14 +41,41 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Idea> Get(Guid id)
+        public async Task<Idea> Get(Guid id)
         {
-            throw new NotImplementedException();
+            using var session = _client.AsyncSession();
+
+            string query = $@"
+                    MATCH (u:{Label.User})-[r:{Relationship.CREATED_IDEA} {{CreatedAt: $CreatedAt}}]->(i:{Label.Idea} {{Id:$Id}})
+                    RETURN u, r, i;
+                ";
+
+            var parameters = new
+            {
+                Id = id
+            };
+
+            var cursor = await session.RunAsync(query, parameters);
+
+            var results = await cursor.ToListAsync<Idea>(BuildIdea);
+
+            return results.FirstOrDefault();
         }
 
-        public Task<List<Idea>> GetAll(IdeaGetAllModel model)
+        public async Task<List<Idea>> GetAll(IdeaGetAllModel model)
         {
-            throw new NotImplementedException();
+            using var session = _client.AsyncSession();
+
+            string query = $@"
+                    MATCH (u:{Label.User})-[r:{Relationship.CREATED_IDEA} {{CreatedAt: $CreatedAt}}]->(i:{Label.Idea})
+                    RETURN u, r, i;
+                ";
+
+            var cursor = await session.RunAsync(query);
+
+            var results = await cursor.ToListAsync<Idea>(BuildIdea);
+
+            return results;
         }
 
         private async Task<Idea> CreateIdea(IAsyncTransaction transaction, IdeaCreateModel model)
