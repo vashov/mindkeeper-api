@@ -26,52 +26,8 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
         {
             using var session = _client.AsyncSession();
 
-            var idea = await session.WriteTransactionAsync<Idea>(async t =>
-            {
-                var createdAt = DateTimeOffset.UtcNow;
-
-                var ideaParameters = new
-                {
-                    Id = Guid.NewGuid(),
-                    Name = model.Name,
-                    Description = model.Description,
-                };
-
-                string createIdeaQuery = $@"
-                    MATCH (u:{Label.User} {{Id: $UserId}})
-                    CREATE (u)-[r:{Relationship.CREATED_IDEA} {{CreatedAt: $CreatedAt}}]->(i:{Label.Idea} {{{ideaParameters.AsProperties()}}})
-                    RETURN u, r, i
-                ";
-
-                var parameters = new
-                {
-                    Id = ideaParameters.Id,
-                    Name = ideaParameters.Name,
-                    Description = ideaParameters.Description,
-                    UserId = model.UserId,
-                    CreatedAt = createdAt
-                };
-
-                var cursor = await t.RunAsync(createIdeaQuery, parameters);
-
-                var results = await cursor.ToListAsync<Idea>(r =>
-                {
-                    var userNode = r["u"].As<INode>();
-                    var rel = r["r"].As<INode>();
-                    var ideaNode = r["i"].As<INode>();
-
-                    var user = userNode.ToObject<User>();
-                    var relationship = rel.ToObject<UserCreatedIdea>();
-                    var idea = ideaNode.ToObject<Idea>();
-
-                    idea.CreatedBy = user.Id;
-                    idea.CreatedAt = relationship.CreatedAt;
-
-                    return idea;
-                });
-
-                return results.First();
-            });
+            var idea = await session.WriteTransactionAsync<Idea>(
+                transaction => CreateIdea(transaction, model));
 
             return idea;
         }
@@ -94,6 +50,110 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
         public Task<List<Idea>> GetAll(IdeaGetAllModel model)
         {
             throw new NotImplementedException();
+        }
+
+        private async Task<Idea> CreateIdea(IAsyncTransaction transaction, IdeaCreateModel model)
+        {
+            var createdAt = DateTimeOffset.UtcNow;
+
+            string createIdeaQuery = $@"
+                    MATCH (u:{Label.User} {{Id: $UserId}})
+                    CREATE (u)-[r:{Relationship.CREATED_IDEA} {{CreatedAt: $CreatedAt}}]->(i:{Label.Idea} {{Id: $Id, Name: $Name, Description: $Description}})
+                    RETURN u, r, i;
+                ";
+
+            var createIdeaParameters = new
+            {
+                Id = Guid.NewGuid(),
+                Name = model.Name,
+                Description = model.Description,
+                UserId = model.UserId,
+                CreatedAt = createdAt
+            };
+
+            IResultCursor cursor = await transaction.RunAsync(createIdeaQuery, createIdeaParameters);
+
+            Idea idea = (await cursor.ToListAsync<Idea>(BuildIdea)).First();
+
+            // TODO: add Idea's relationships
+            // RELATES_TO
+            // DEPENDS_ON
+            // COPY_OF
+
+            if (model.ParentIdeaId.HasValue)
+            {
+                string createRelateWithIdea = $@"
+                        MATCH (p:{Label.Idea} {{Id: $ParentIdeaId}}), (i:{Label.Idea} {{Id: $IdeaId}})
+                        CREATE (p)-[r:{Relationship.PARENT_FOR} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(i)
+                        ;
+                    ";
+
+                var parentParameters = new
+                {
+                    ParentIdeaId = model.ParentIdeaId.Value,
+                    IdeaId = idea.Id,
+                    ConnectedAt = createdAt,
+                    ConnectedBy = model.UserId
+                };
+
+                cursor = await transaction.RunAsync(createRelateWithIdea, parentParameters);
+            }
+
+            if (model.CountryId.HasValue)
+            {
+                string createRelateWithCountry = $@"
+                        MATCH (p:{Label.Country} {{Id: $CountryId}}), (i:{Label.Idea} {{Id: $IdeaId}})
+                        CREATE (p)-[r:{Relationship.COUNTRY_OF} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(i)
+                        ;
+                    ";
+
+                var parentParameters = new
+                {
+                    CountryId = model.CountryId.Value,
+                    IdeaId = idea.Id,
+                    ConnectedAt = createdAt,
+                    ConnectedBy = model.UserId
+                };
+
+                cursor = await transaction.RunAsync(createRelateWithCountry, parentParameters);
+            }
+
+            if (model.SubdomainId.HasValue)
+            {
+                string createRelateWithSubdomain = $@"
+                        MATCH (p:{Label.Subdomain} {{Id: $SubdomainId}}), (i:{Label.Idea} {{Id: $IdeaId}})
+                        CREATE (p)-[r:{Relationship.CONTAINS_IDEA} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(i)
+                        ;
+                    ";
+
+                var parentParameters = new
+                {
+                    SubdomainId = model.SubdomainId.Value,
+                    IdeaId = idea.Id,
+                    ConnectedAt = createdAt,
+                    ConnectedBy = model.UserId
+                };
+
+                cursor = await transaction.RunAsync(createRelateWithSubdomain, parentParameters);
+            }
+
+            return idea;
+        }
+
+        private Idea BuildIdea(IRecord record)
+        {
+            var userNode = record["u"].As<INode>();
+            var rel = record["r"].As<INode>();
+            var ideaNode = record["i"].As<INode>();
+
+            var user = userNode.ToObject<User>();
+            var relationship = rel.ToObject<UserCreatedIdea>();
+            var idea = ideaNode.ToObject<Idea>();
+
+            idea.CreatedBy = user.Id;
+            idea.CreatedAt = relationship.CreatedAt;
+
+            return idea;
         }
     }
 }

@@ -13,7 +13,9 @@
 
         // Idea
         public const string COPY_OF = nameof(COPY_OF);
-
+        public const string PARENT_FOR = nameof(PARENT_FOR);
+        public const string RELATEST_TO = nameof(RELATEST_TO);
+        public const string DEPENDS_ON = nameof(DEPENDS_ON);
 
         // IdeaUpdate
         public const string UPDATE_OF = nameof(UPDATE_OF);
