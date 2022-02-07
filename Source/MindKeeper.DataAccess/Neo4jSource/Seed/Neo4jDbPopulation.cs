@@ -33,7 +33,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
         private async Task<bool> IsAnyNodeExistsWithLabel(string label)
         {
             string query = @$"
-                MATCH (n: {{{label}}})
+                MATCH (n:{label})
                 RETURN n
                 LIMIT 1
                 ";
@@ -43,7 +43,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
             var result = await cursor.ToListAsync<Guid>(r =>
             {
                 var node = r["n"].As<INode>();
-                var id = node.GetValueStrict<Guid>("Id");
+                var id = Guid.Parse(node.GetValueStrict<string>("Id"));
                 return id;
             });
 
@@ -52,10 +52,10 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
 
         private async Task InsertCountries()
         {
-            if (!await IsAnyNodeExistsWithLabel(Label.Country))
+            if (await IsAnyNodeExistsWithLabel(Label.Country))
                 return;
 
-            using var fileReader = File.OpenRead(@".\SeedData\countries.json");
+            using var fileReader = File.OpenRead(GetPathToFile(@".\SeedData\countries.json"));
 
             var countries = await JsonSerializer
                 .DeserializeAsync<List<CountryModel>>(fileReader, _jsonSerializerOptions);
@@ -67,7 +67,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
                 var country = countries[idx];
                 var parameters = new
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     country.Name,
                     country.Code
                 };
@@ -80,10 +80,10 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
 
         private async Task InsertScientificDomains()
         {
-            if (!await IsAnyNodeExistsWithLabel(Label.Domain))
+            if (await IsAnyNodeExistsWithLabel(Label.Domain))
                 return;
 
-            using var fileReader = File.OpenRead(@".\SeedData\scientific_domains.json");
+            using var fileReader = File.OpenRead(GetPathToFile(@".\SeedData\scientific_domains.json"));
 
             var domains = await JsonSerializer
                 .DeserializeAsync<List<ScientificDomainModel>>(fileReader, _jsonSerializerOptions);
@@ -92,29 +92,45 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
 
             foreach (var domain in domains)
             {
-                var domainId = Guid.NewGuid();
+                var domainId = Guid.NewGuid().ToString();
                 var domainName = domain.Domain;
+
+                string createDomainCommand = $@"
+                     CREATE (d:{Label.Domain} {{Id:$DomainId, Name:$DomainName}})
+                     RETURN d;
+                ";
+
+                await session.RunAsync(createDomainCommand,
+                    new { DomainId = domainId, DomainName = domainName});
 
                 foreach (var subdomainName in domain.Subdomains)
                 {
-                    var subdomainId = Guid.NewGuid();
+                    var subdomainId = Guid.NewGuid().ToString();
 
                     var parameters = new
                     {
                         DomainId = domainId,
-                        DomainName = domainName,
                         SubdomainId = subdomainId,
                         SubdomainName = subdomainName
                     };
 
                     string createNodesComand = $@"
-                        CREATE p = (domain:{Label.Domain} {{Id:$DomainId, Name:$DomainName}})-[:{Relationship.CONTAINS_SUBDOMAIN}]->(subdomain:{Label.Subdomain} {{Id:$SubdomainId, Name:$SubdomainName}})
+                        MATCH (d:{Label.Domain} {{Id:$DomainId}})
+                        CREATE p = (d)-[:{Relationship.CONTAINS_SUBDOMAIN}]->(s:{Label.Subdomain} {{Id:$SubdomainId, Name:$SubdomainName}})
                         RETURN p
                         ;";
 
                     var cursor = await session.RunAsync(createNodesComand, parameters);
                 }
             }
+        }
+
+        private string GetPathToFile(string path)
+        {
+            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string combinedPath = System.IO.Path.Combine(currentDirectory, path);
+            string filePath = Path.GetFullPath(combinedPath);
+            return filePath;
         }
     }
 }

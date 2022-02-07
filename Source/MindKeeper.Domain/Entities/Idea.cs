@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace MindKeeper.Domain.Entities
 {
-    public class Idea
+    public class Idea : BaseEntity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Guid CreatedBy { get; set; }

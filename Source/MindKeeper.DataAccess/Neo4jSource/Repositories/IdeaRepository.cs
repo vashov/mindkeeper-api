@@ -90,7 +90,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
 
             var createIdeaParameters = new
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 Name = model.Name,
                 Description = model.Description,
                 UserId = model.UserId,

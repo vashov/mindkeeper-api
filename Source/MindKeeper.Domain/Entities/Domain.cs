@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace MindKeeper.Domain.Entities
+﻿namespace MindKeeper.Domain.Entities
 {
-    public class Domain
+    public class Domain : BaseEntity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }
