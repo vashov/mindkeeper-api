@@ -50,7 +50,7 @@ namespace MindKeeper.Api.Controllers
 
             var result = await _ideaService.GetAll(filter);
 
-            var ideaDtos = _mapper.Map<List<IdeasGetAllResult.IdeaResponse>>(result);
+            var ideaDtos = _mapper.Map<List<IdeasGetAllResult.Idea>>(result);
             var response = new IdeasGetAllResult() 
             { 
                 Ideas = ideaDtos 
@@ -77,20 +77,20 @@ namespace MindKeeper.Api.Controllers
             return new Response<IdeaCreateResult>(response);
         }
 
-        [HttpPost("Link/Add")]
-        public async Task<Response> AddLink([FromBody] IdeaLinkAddRequest request)
-        {
-            await _ideaService.CreateLink(request.ParentId, request.ChildId);
+        //[HttpPost("Link/Add")]
+        //public async Task<Response> AddLink([FromBody] IdeaLinkAddRequest request)
+        //{
+        //    await _ideaService.CreateLink(request.ParentId, request.ChildId);
 
-            return new Response();
-        }
+        //    return new Response();
+        //}
 
-        [HttpDelete("Link/Delete")]
-        public async Task<Response> DeleteLink([FromBody] IdeaLinkDeleteRequest request)
-        {
-            await _ideaService.DeleteLink(request.ParentId, request.ChildId);
+        //[HttpDelete("Link/Delete")]
+        //public async Task<Response> DeleteLink([FromBody] IdeaLinkDeleteRequest request)
+        //{
+        //    await _ideaService.DeleteLink(request.ParentId, request.ChildId);
 
-            return new Response();
-        }
+        //    return new Response();
+        //}
     }
 }

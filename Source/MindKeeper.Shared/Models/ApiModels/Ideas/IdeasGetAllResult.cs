@@ -5,7 +5,7 @@ namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
     public class IdeasGetAllResult
     {
-        public class IdeaResponse
+        public class Idea
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
@@ -18,6 +18,6 @@ namespace MindKeeper.Shared.Models.ApiModels.Ideas
             public List<Guid> Children { get; } = new List<Guid>();
         }
 
-        public List<IdeaResponse> Ideas { get; set; }
+        public List<Idea> Ideas { get; set; }
     }
 }
