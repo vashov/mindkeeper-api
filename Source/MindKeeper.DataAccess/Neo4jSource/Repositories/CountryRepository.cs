@@ -22,7 +22,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             using var session = _client.AsyncSession();
 
             string query = $@"
-                    MATCH (c:{Label.Country}))
+                    MATCH (c:{Label.Country})
                     RETURN c;
                 ";
 

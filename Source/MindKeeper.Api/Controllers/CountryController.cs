@@ -13,7 +13,7 @@ namespace MindKeeper.Api.Controllers
     [ApiController]
     [ControllerRoute]
     [Authorize]
-    public class CountryController : Controller
+    public class CountryController : ControllerBase
     {
         private readonly ICountryService _countryService;
         private readonly IMapper _mapper;

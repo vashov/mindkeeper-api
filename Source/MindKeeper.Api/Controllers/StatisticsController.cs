@@ -17,7 +17,7 @@ namespace MindKeeper.Api.Controllers
     [ApiController]
     [ControllerRoute]
     [Authorize]
-    public class StatisticsController : Controller
+    public class StatisticsController : ControllerBase
     {
         private readonly ILogger<StatisticsController> _logger;
         private readonly IStatisticsService _statisticsService;

@@ -29,6 +29,12 @@ namespace MindKeeper.Api.Core
 
             CreateMap<MindKeeper.Domain.Entities.Country,
                 Shared.Models.ApiModels.Countries.CountryGetAllResult.Country>();
+
+            CreateMap<MindKeeper.Domain.Entities.DomainEntity,
+                Shared.Models.ApiModels.Domains.DomainGetAllResult.Domain>();
+
+            CreateMap<MindKeeper.Domain.Entities.Subdomain,
+                Shared.Models.ApiModels.Domains.DomainGetAllResult.Subdomain>();
         }
     }
 }
