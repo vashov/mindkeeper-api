@@ -141,13 +141,5 @@ namespace MindKeeper.Api.Services.Ideas
             if (invalidIdeas.HasValues())
                 throw new ApiException($"Invalid ideas with id {string.Join(",", invalidIdeas)}.");
         }
-
-        private async Task ValidateIdeasAsFutureChildAndParent(Guid parentId, Guid childId)
-        {
-            if (parentId == childId)
-                throw new AppValidationException("Ideas should have different ID.");
-
-            await ValidateIdeasExist(parentId, childId);
-        }
     }
 }
