@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MindKeeper.Domain.Interfaces
+namespace MindKeeper.Api.Services.Countries
 {
-    public interface ICountryRepository
+    public interface ICountryService
     {
         Task<List<Country>> GetAll();
     }

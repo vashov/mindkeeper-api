@@ -26,6 +26,9 @@ namespace MindKeeper.Api.Core
 
             CreateMap<MindKeeper.Domain.EntitiesComposed.StatsUser,
                 Shared.Models.ApiModels.Statistics.StatsUserResult>();
+
+            CreateMap<MindKeeper.Domain.Entities.Country,
+                Shared.Models.ApiModels.Countries.CountryGetAllResult.Country>();
         }
     }
 }
