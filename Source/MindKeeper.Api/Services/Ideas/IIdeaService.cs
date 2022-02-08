@@ -10,7 +10,7 @@ namespace MindKeeper.Api.Services.Ideas
     {
         public Task<Idea> Get(Guid id);
         public Task<List<Idea>> GetAll(IdeaGetAllModel filter);
-        public Task<Idea> Create(Guid userId, string name, string descritpion, Guid? parentId);
+        public Task<Idea> Create(IdeaCreateModel model);
         public Task CreateLink(Guid parentId, Guid childId);
         public Task DeleteLink(Guid parentId, Guid childId);
     }

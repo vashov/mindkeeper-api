@@ -6,6 +6,9 @@ namespace MindKeeper.Api.Core
     {
         public MappingProfile()
         {
+            CreateMap<Shared.Models.ApiModels.Ideas.IdeaCreateRequest,
+                Domain.Interfaces.Ideas.IdeaCreateModel>();
+
             CreateMap<MindKeeper.Domain.Entities.Idea,
                 Shared.Models.ApiModels.Ideas.IdeaGetResult>();
 

@@ -21,27 +21,19 @@ namespace MindKeeper.Api.Services.Ideas
             _userRepository = userRepository;
         }
 
-        public async Task<Idea> Create(Guid userId, string name, string descritpion, Guid? parentId)
+        public async Task<Idea> Create(IdeaCreateModel model)
         {
-            if (_userRepository.Get(userId) == null)
+            if (_userRepository.Get(model.UserId) == null)
                 throw new ApiException("Invalid user id.");
 
-            ValidateNameAndDescription(name, descritpion);
+            ValidateNameAndDescription(model.Name, model.Description);
 
-            if (parentId.HasValue && (await _ideaRepository.Get(parentId.Value)) == null)
+            if (model.ParentIdeaId.HasValue && (await _ideaRepository.Get(model.ParentIdeaId.Value)) == null)
                 throw new ApiException("Invalid parent idea id.");
 
             // TODO: validate countryId, subdomainId, domainId.
 
-            var ideaCreateModel = new IdeaCreateModel
-            {
-                UserId = userId,
-                Name = name,
-                Description = descritpion,
-                ParentIdeaId = parentId
-            };
-
-            var idea = await _ideaRepository.Create(ideaCreateModel);
+            var idea = await _ideaRepository.Create(model);
 
             return idea;
         }

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using MindKeeper.Api.Core.Auth;
 using MindKeeper.Api.Core.Routing;
 using MindKeeper.Api.Services.Ideas;
-using MindKeeper.Domain.Constants;
 using MindKeeper.Domain.Interfaces.Ideas;
 using MindKeeper.Shared.Models.ApiModels.Ideas;
 using MindKeeper.Shared.Wrappers;
@@ -62,12 +61,10 @@ namespace MindKeeper.Api.Controllers
         [HttpPost("[action]")]
         public async Task<Response<IdeaCreateResult>> Create([FromBody] IdeaCreateRequest request)
         {
-            var userId = User.GetUserId();
-            var result = await _ideaService.Create(
-                userId,
-                request.Name,
-                request.Description,
-                request.ParentId);
+            var model = _mapper.Map<IdeaCreateModel>(request);
+            model.UserId = User.GetUserId();
+
+            var result = await _ideaService.Create(model);
 
             var response = new IdeaCreateResult()
             {
