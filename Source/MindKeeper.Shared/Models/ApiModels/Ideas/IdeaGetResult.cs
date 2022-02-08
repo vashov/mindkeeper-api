@@ -5,15 +5,14 @@ namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
     public class IdeaGetResult
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int TypeId { get; set; }
-        public int CreatedBy { get; set; }
+        public Guid CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
-        public int UpdatedBy { get; set; }
-        public DateTimeOffset UpdatedAt { get; set; }
-        public List<int> Parents { get; } = new List<int>();
-        public List<int> Children { get; } = new List<int>();
+        public Guid? UpdatedBy { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
+        public List<Guid> Parents { get; } = new List<Guid>();
+        public List<Guid> Children { get; } = new List<Guid>();
     }
 }

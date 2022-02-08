@@ -9,7 +9,7 @@ namespace MindKeeper.Shared.Models.ApiModels.Ideas
         public string Name { get; set; }
 
         [Required(AllowEmptyStrings = true)]
-        public string Descritpion { get; set; }
+        public string Description { get; set; }
         public Guid? ParentId { get; set; }
     }
 }

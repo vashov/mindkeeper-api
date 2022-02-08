@@ -66,7 +66,7 @@ namespace MindKeeper.Api.Controllers
             var result = await _ideaService.Create(
                 userId,
                 request.Name,
-                request.Descritpion,
+                request.Description,
                 request.ParentId);
 
             var response = new IdeaCreateResult()
