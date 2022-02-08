@@ -11,7 +11,7 @@ namespace MindKeeper.Api.Services.Ideas
         public Task<Idea> Get(Guid id);
         public Task<List<Idea>> GetAll(IdeaGetAllModel filter);
         public Task<Idea> Create(IdeaCreateModel model);
-        public Task CreateLink(Guid parentId, Guid childId);
-        public Task DeleteLink(Guid parentId, Guid childId);
+        public Task CreateLink(IdeaLinkAddModel model);
+        public Task DeleteLink(IdeaLinkDeleteModel model);
     }
 }

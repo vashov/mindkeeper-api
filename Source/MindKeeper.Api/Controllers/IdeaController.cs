@@ -74,20 +74,26 @@ namespace MindKeeper.Api.Controllers
             return new Response<IdeaCreateResult>(response);
         }
 
-        //[HttpPost("Link/Add")]
-        //public async Task<Response> AddLink([FromBody] IdeaLinkAddRequest request)
-        //{
-        //    await _ideaService.CreateLink(request.ParentId, request.ChildId);
+        [HttpPost("Link/Add")]
+        public async Task<Response> AddLink([FromBody] IdeaLinkAddRequest request)
+        {
+            var model = _mapper.Map<IdeaLinkAddModel>(request);
+            model.UserId = User.GetUserId();
 
-        //    return new Response();
-        //}
+            await _ideaService.CreateLink(model);
 
-        //[HttpDelete("Link/Delete")]
-        //public async Task<Response> DeleteLink([FromBody] IdeaLinkDeleteRequest request)
-        //{
-        //    await _ideaService.DeleteLink(request.ParentId, request.ChildId);
+            return new Response();
+        }
 
-        //    return new Response();
-        //}
+        [HttpDelete("Link/Delete")]
+        public async Task<Response> DeleteLink([FromBody] IdeaLinkDeleteRequest request)
+        {
+            var model = _mapper.Map<IdeaLinkDeleteModel>(request);
+            model.UserId = User.GetUserId();
+
+            await _ideaService.DeleteLink(model);
+
+            return new Response();
+        }
     }
 }

@@ -18,6 +18,12 @@ namespace MindKeeper.Api.Core
             CreateMap<Shared.Models.ApiModels.Ideas.IdeasGetAllRequest,
                 MindKeeper.Domain.Interfaces.Ideas.IdeaGetAllModel>();
 
+            CreateMap<Shared.Models.ApiModels.Ideas.IdeaLinkAddRequest,
+                MindKeeper.Domain.Interfaces.Ideas.IdeaLinkAddModel>();
+
+            CreateMap<Shared.Models.ApiModels.Ideas.IdeaLinkDeleteRequest,
+                MindKeeper.Domain.Interfaces.Ideas.IdeaLinkDeleteModel>();
+
             CreateMap<MindKeeper.Domain.Entities.Achievement,
                 Shared.Models.ApiModels.Statistics.AchievementsResult.Achivement>();
 

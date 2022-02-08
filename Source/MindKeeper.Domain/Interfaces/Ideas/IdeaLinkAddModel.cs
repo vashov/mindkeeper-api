@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace MindKeeper.Shared.Models.ApiModels.Ideas
+namespace MindKeeper.Domain.Interfaces.Ideas
 {
-    public class IdeaLinkDeleteRequest
+    public struct IdeaLinkAddModel
     {
-        [Required]
         public Guid IdeaId { get; set; }
+        public Guid UserId { get; set; }
 
         public Guid? ParentIdea { get; set; }
         public Guid? ChildIdea { get; set; }

@@ -54,25 +54,29 @@ namespace MindKeeper.Api.Services.Ideas
             return ideas;
         }
 
-        public async Task CreateLink(Guid parentId, Guid childId)
+        public async Task CreateLink(IdeaLinkAddModel model)
         {
-            await ValidateIdeasAsFutureChildAndParent(parentId, childId);
+            throw new NotImplementedException();
 
-            var created = await _ideaRepository.CreateLink(parentId, childId);
-            if (!created)
-                throw new ApiException(
-                    $"Connection of idea (parent) {parentId} with idea (child) {childId} wasn't created.");
+            //await ValidateIdeasAsFutureChildAndParent(parentId, childId);
+
+            //var created = await _ideaRepository.CreateLink(parentId, childId);
+            //if (!created)
+            //    throw new ApiException(
+            //        $"Connection of idea (parent) {parentId} with idea (child) {childId} wasn't created.");
         }
 
-        public async Task DeleteLink(Guid parentId, Guid childId)
+        public async Task DeleteLink(IdeaLinkDeleteModel model)
         {
-            await ValidateIdeasAsFutureChildAndParent(parentId, childId);
+            throw new NotImplementedException();
 
-            var deleted = await _ideaRepository.DeleteLink(parentId, childId);
+            //await ValidateIdeasAsFutureChildAndParent(parentId, childId);
 
-            if (!deleted)
-                throw new ApiException(
-                    $"Connection of idea (parent) {parentId} with idea (child) {childId} wasn't deleted.");
+            //var deleted = await _ideaRepository.DeleteLink(parentId, childId);
+
+            //if (!deleted)
+            //    throw new ApiException(
+            //        $"Connection of idea (parent) {parentId} with idea (child) {childId} wasn't deleted.");
         }
 
         private static void ValidateNameAndDescription(string name, string description)
