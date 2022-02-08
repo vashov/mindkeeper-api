@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Okaaay lets go",
+        "description": "Create your first idea",
+        "isSecret": false
+    },
+    {
+        "id": 2,
+        "name": "Step-by-step",
+        "description": "Create 10 ideas",
+        "isSecret": false
+    },
+    {
+        "id": 3,
+        "name": "Good start",
+        "description": "Create 100 ideas",
+        "isSecret": false
+    },
+    {
+        "id": 4,
+        "name": "I don't think it works",
+        "description": "Vote 'No' for the first time",
+        "isSecret": true
+    }
+]

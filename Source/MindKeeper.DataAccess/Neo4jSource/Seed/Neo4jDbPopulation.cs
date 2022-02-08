@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -28,6 +29,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
         {
             await InsertCountries();
             await InsertScientificDomains();
+            await InsertAchievements();
         }
 
         private async Task<bool> IsAnyNodeExistsWithLabel(string label)
@@ -123,6 +125,36 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
                     var cursor = await session.RunAsync(createNodesComand, parameters);
                 }
             }
+        }
+
+        private async Task InsertAchievements()
+        {
+            List<AchievementModel> achievements;
+
+            using var fileReader = File.OpenRead(GetPathToFile(@".\SeedData\achievements.json"));
+            {
+                achievements = await JsonSerializer
+                    .DeserializeAsync<List<AchievementModel>>(fileReader, _jsonSerializerOptions);
+            }
+
+            using var session = _driver.AsyncSession();
+
+            for (var i = 0; i < achievements.Count; i++)
+            {
+                var a = achievements[i];
+
+                var parameters = new
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    Description = a.Description,
+                    IsSecret = a.IsSecret
+                };
+
+                string query = $"MERGE (:{Label.Achievement} {{{parameters.AsProperties()}}});";
+                var cursor = await session.RunAsync(query, parameters);
+            }
+
         }
 
         private string GetPathToFile(string path)

@@ -34,11 +34,11 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             {
                 parameters = new
                 {
-                    UserId = userId
+                    UserId = userId.ToString()
                 };
 
                 query = $@"
-                    MATCH (u:{Label.User} {{Id:$UserId}})-[r:{Relationship.HAS_ACHIEVEMENT}->(a:{Label.Achievement})
+                    MATCH (u:{Label.User} {{Id:$UserId}})-[r:{Relationship.HAS_ACHIEVEMENT}]->(a:{Label.Achievement})
                     RETURN a;
                 ";
             }

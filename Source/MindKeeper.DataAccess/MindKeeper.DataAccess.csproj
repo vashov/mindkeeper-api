@@ -28,4 +28,10 @@
     <ProjectReference Include="..\MindKeeper.Shared\MindKeeper.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="SeedData\achievements.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,6 @@
-﻿namespace MindKeeper.Domain.Entities
+﻿namespace MindKeeper.DataAccess.SeedData.Models
 {
-    public class Achievement
+    internal class AchievementModel
     {
         public long Id { get; set; }
         public string Name { get; set; }
