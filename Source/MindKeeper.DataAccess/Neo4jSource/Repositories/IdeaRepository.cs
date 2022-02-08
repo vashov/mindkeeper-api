@@ -300,6 +300,41 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             return result;
         }
 
+        public async Task AddToFavorites(Guid userId, Guid ideaId)
+        {
+            string query = $@"
+                    MATCH (u:{Label.User} {{Id: $UserId}}), (i:{Label.Idea} {{Id: $IdeaId}})
+                    CREATE (u)-[r:{Relationship.ADDED_TO_FAVORITES} {{CreatedAt: $CreatedAt}}]->(i)
+                    ;
+                ";
+
+            var parameters = new
+            {
+                UserId = userId.ToString(),
+                IdeaId = ideaId.ToString()
+            };
+
+            using var session = _client.AsyncSession();
+            await session.RunAsync(query, parameters);
+        }
+
+        public async Task DeleteFromFavorites(Guid userId, Guid ideaId)
+        {
+            string query = $@"
+                    MATCH (u:{Label.User} {{Id: $UserId}})-[r:{Relationship.ADDED_TO_FAVORITES}]->(i:{Label.Idea} {{Id: $IdeaId}})
+                    DELETE r;
+                ";
+
+            var parameters = new
+            {
+                UserId = userId.ToString(),
+                IdeaId = ideaId.ToString()
+            };
+
+            using var session = _client.AsyncSession();
+            await session.RunAsync(query, parameters);
+        }
+
         private async Task<Idea> CreateIdea(IAsyncTransaction transaction, IdeaCreateModel model)
         {
             var createdAt = DateTimeOffset.UtcNow;

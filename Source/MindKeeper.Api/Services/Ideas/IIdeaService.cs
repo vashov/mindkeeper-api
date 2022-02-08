@@ -13,5 +13,7 @@ namespace MindKeeper.Api.Services.Ideas
         public Task<Idea> Create(IdeaCreateModel model);
         public Task CreateLink(IdeaLinkAddModel model);
         public Task DeleteLink(IdeaLinkDeleteModel model);
+        Task AddToFavorites(Guid userId, Guid ideaId);
+        Task DeleteFromFavorites(Guid userId, Guid ideaId);
     }
 }

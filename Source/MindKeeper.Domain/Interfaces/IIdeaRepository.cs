@@ -13,5 +13,7 @@ namespace MindKeeper.Domain.Interfaces
         public Task<Idea> Create(IdeaCreateModel model);
         public Task<bool> CreateLink(IdeaLinkAddModel model);
         public Task<bool> DeleteLink(IdeaLinkDeleteModel model);
+        Task AddToFavorites(Guid userId, Guid ideaId);
+        Task DeleteFromFavorites(Guid userId, Guid ideaId);
     }
 }

@@ -68,6 +68,20 @@ namespace MindKeeper.Api.Services.Ideas
             await _ideaRepository.DeleteLink(model);
         }
 
+        public async Task AddToFavorites(Guid userId, Guid ideaId)
+        {
+            await ValidateIdeasExist(ideaId);
+
+            await _ideaRepository.AddToFavorites(userId, ideaId);
+        }
+
+        public async Task DeleteFromFavorites(Guid userId, Guid ideaId)
+        {
+            await ValidateIdeasExist(ideaId);
+
+            await _ideaRepository.DeleteFromFavorites(userId, ideaId);
+        }
+
         private async Task ValidateIdeaLinkModel(IIdeaLinkModel model)
         {
             if (model.IdeaId == default)

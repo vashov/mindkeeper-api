@@ -95,5 +95,25 @@ namespace MindKeeper.Api.Controllers
 
             return new Response();
         }
+
+        [HttpPost("Favorites/Add/{ideaId}")]
+        public async Task<Response> AddToFavorites([FromRoute] Guid ideaId)
+        {
+            var userId = User.GetUserId();
+
+            await _ideaService.AddToFavorites(userId, ideaId);
+
+            return new Response();
+        }
+
+        [HttpDelete("Favorites/Delete/{ideaId}")]
+        public async Task<Response> DeleteFromFavorites([FromRoute] Guid ideaId)
+        {
+            var userId = User.GetUserId();
+
+            await _ideaService.DeleteFromFavorites(userId, ideaId);
+
+            return new Response();
+        }
     }
 }
