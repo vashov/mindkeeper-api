@@ -8,8 +8,8 @@ namespace MindKeeper.Domain.Interfaces
     public interface IUserRepository
     {
         public Task<User> Get(Guid id);
-        public Task<User> Get(string mail, bool isNormalizedSearch = false);
+        public Task<User> Get(string username, bool isNormalizedSearch = false);
         public Task<List<User>> GetAll();
-        public Task<User> Create(string mail, string passwordHash);
+        public Task<User> Create(string username, string passwordHash);
     }
 }

@@ -26,40 +26,40 @@ namespace MindKeeper.Api.Services.Users
             throw new NotImplementedException();
         }
 
-        public async Task<User> CreateUser(string mail, string password)
+        public async Task<User> CreateUser(string username, string password)
         {
-            if (string.IsNullOrWhiteSpace(mail))
+            if (string.IsNullOrWhiteSpace(username))
                 throw new AppValidationException("Invalid username.");
 
             if (string.IsNullOrWhiteSpace(password))
                 throw new AppValidationException("Invalid password.");
 
-            var userByMail = await _userRepository.Get(mail, isNormalizedSearch: true);
-            if (userByMail != null)
+            var userByName = await _userRepository.Get(username, isNormalizedSearch: true);
+            if (userByName != null)
                 throw new ApiException("Username is used already.");
 
             var passwordHasher = new PasswordHasher();
             var passwordHash = passwordHasher.CreateHash(password);
-            var createdUser = await _userRepository.Create(mail, passwordHash);
+            var createdUser = await _userRepository.Create(username, passwordHash);
 
             createdUser.PasswordHash = string.Empty;
 
             return createdUser;
         }
 
-        public async Task<string> CreateAccessToken(string mail, string password)
+        public async Task<string> CreateAccessToken(string username, string password)
         {
-            const string credentialsError = "Invalid mail or password.";
+            const string credentialsError = "Invalid username or password.";
             
-            var userByMail = await _userRepository.Get(mail, isNormalizedSearch: false);
-            if (userByMail == null)
+            var userByName = await _userRepository.Get(username, isNormalizedSearch: false);
+            if (userByName == null)
                 throw new ApiException(credentialsError);
 
             var passwordHasher = new PasswordHasher();
-            if (!passwordHasher.ArePasswordsEqual(password, userByMail.PasswordHash))
+            if (!passwordHasher.ArePasswordsEqual(password, userByName.PasswordHash))
                 throw new ApiException(credentialsError);
 
-            var userIdentity = GetUserClaims(userByMail);
+            var userIdentity = GetUserClaims(userByName);
             var now = DateTime.UtcNow;
 
             var jwt = new JwtSecurityToken(

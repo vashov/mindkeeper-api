@@ -5,6 +5,7 @@ using Neo4j.Driver;
 using Neo4j.Driver.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,9 +28,19 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
 
         public async Task Init()
         {
-            await InsertCountries();
-            await InsertScientificDomains();
-            await InsertAchievements();
+            await ActAndLog(InsertCountries, nameof(InsertCountries));
+            await ActAndLog(InsertScientificDomains, nameof(InsertScientificDomains));
+            await ActAndLog(InsertAchievements, nameof(InsertAchievements));
+        }
+
+        private static async Task ActAndLog(Func<Task> function, string actionName)
+        {
+            var w = Stopwatch.StartNew();
+
+            await function();
+            
+            Console.WriteLine($"{actionName}: {w.ElapsedMilliseconds}");
+            w.Stop();
         }
 
         private async Task<bool> IsAnyNodeExistsWithLabel(string label)

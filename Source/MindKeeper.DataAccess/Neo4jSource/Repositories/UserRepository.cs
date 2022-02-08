@@ -19,15 +19,15 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             _client = client;
         }
 
-        public async Task<User> Create(string mail, string passwordHash)
+        public async Task<User> Create(string username, string passwordHash)
         {
-            string normalizedMail = mail.ToLower();
+            string normalizedName = username.ToLower();
 
             var parameters = new
             {
                 Id = Guid.NewGuid().ToString(),
-                Mail = mail,
-                NormalizedMail = normalizedMail,
+                Name = username,
+                NormalizedName = normalizedName,
                 PasswordHash = passwordHash,
                 CreatedAt = DateTimeOffset.UtcNow
             };
@@ -75,18 +75,18 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             return results.FirstOrDefault();
         }
 
-        public async Task<User> Get(string mail, bool isNormalizedSearch = false)
+        public async Task<User> Get(string username, bool isNormalizedSearch = false)
         {
             object parameters;
 
             if (isNormalizedSearch)
             {
-                var normalizedMail = mail.ToLower();
-                parameters = new { NormalizedMail = normalizedMail };
+                var normalizedName = username.ToLower();
+                parameters = new { NormalizedName = normalizedName };
             }
             else
             {
-                parameters = new { Mail = mail };
+                parameters = new { Name = username };
             }
 
             string query = $@"
