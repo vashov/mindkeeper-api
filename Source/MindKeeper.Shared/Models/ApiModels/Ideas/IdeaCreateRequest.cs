@@ -10,6 +10,6 @@ namespace MindKeeper.Shared.Models.ApiModels.Ideas
 
         [Required(AllowEmptyStrings = true)]
         public string Descritpion { get; set; }
-        public Guid ParentId { get; set; }
+        public Guid? ParentId { get; set; }
     }
 }

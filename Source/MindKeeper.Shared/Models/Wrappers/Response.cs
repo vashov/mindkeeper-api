@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using System.Text.Json.Serialization;
 
 namespace MindKeeper.Shared.Wrappers
 {
@@ -44,7 +45,11 @@ namespace MindKeeper.Shared.Wrappers
 
         public int Status { get; set; }
         public bool Succeeded { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Message { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string> Errors { get; set; }
     }
 }

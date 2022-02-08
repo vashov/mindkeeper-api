@@ -46,13 +46,13 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             using var session = _client.AsyncSession();
 
             string query = $@"
-                    MATCH (u:{Label.User})-[r:{Relationship.CREATED_IDEA} {{CreatedAt: $CreatedAt}}]->(i:{Label.Idea} {{Id:$Id}})
+                    MATCH (u:{Label.User})-[r:{Relationship.CREATED_IDEA}]->(i:{Label.Idea} {{Id:$Id}})
                     RETURN u, r, i;
                 ";
 
             var parameters = new
             {
-                Id = id
+                Id = id.ToString()
             };
 
             var cursor = await session.RunAsync(query, parameters);
@@ -67,7 +67,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             using var session = _client.AsyncSession();
 
             string query = $@"
-                    MATCH (u:{Label.User})-[r:{Relationship.CREATED_IDEA} {{CreatedAt: $CreatedAt}}]->(i:{Label.Idea})
+                    MATCH (u:{Label.User})-[r:{Relationship.CREATED_IDEA}]->(i:{Label.Idea})
                     RETURN u, r, i;
                 ";
 
@@ -81,6 +81,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
         private async Task<Idea> CreateIdea(IAsyncTransaction transaction, IdeaCreateModel model)
         {
             var createdAt = DateTimeOffset.UtcNow;
+            string userId = model.UserId.ToString();
 
             string createIdeaQuery = $@"
                     MATCH (u:{Label.User} {{Id: $UserId}})
@@ -93,13 +94,14 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 Id = Guid.NewGuid().ToString(),
                 Name = model.Name,
                 Description = model.Description,
-                UserId = model.UserId,
+                UserId = userId,
                 CreatedAt = createdAt
             };
 
             IResultCursor cursor = await transaction.RunAsync(createIdeaQuery, createIdeaParameters);
 
             Idea idea = (await cursor.ToListAsync<Idea>(BuildIdea)).First();
+            string ideaId = idea.Id.ToString();
 
             // TODO: add Idea's relationships
             // RELATES_TO
@@ -116,10 +118,10 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
 
                 var parentParameters = new
                 {
-                    ParentIdeaId = model.ParentIdeaId.Value,
-                    IdeaId = idea.Id,
+                    ParentIdeaId = model.ParentIdeaId.Value.ToString(),
+                    IdeaId = ideaId,
                     ConnectedAt = createdAt,
-                    ConnectedBy = model.UserId
+                    ConnectedBy = userId
                 };
 
                 cursor = await transaction.RunAsync(createRelateWithIdea, parentParameters);
@@ -135,10 +137,10 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
 
                 var parentParameters = new
                 {
-                    CountryId = model.CountryId.Value,
-                    IdeaId = idea.Id,
+                    CountryId = model.CountryId.Value.ToString(),
+                    IdeaId = ideaId,
                     ConnectedAt = createdAt,
-                    ConnectedBy = model.UserId
+                    ConnectedBy = userId
                 };
 
                 cursor = await transaction.RunAsync(createRelateWithCountry, parentParameters);
@@ -154,10 +156,10 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
 
                 var parentParameters = new
                 {
-                    SubdomainId = model.SubdomainId.Value,
-                    IdeaId = idea.Id,
+                    SubdomainId = model.SubdomainId.Value.ToString(),
+                    IdeaId = ideaId,
                     ConnectedAt = createdAt,
-                    ConnectedBy = model.UserId
+                    ConnectedBy = userId
                 };
 
                 cursor = await transaction.RunAsync(createRelateWithSubdomain, parentParameters);
@@ -169,7 +171,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
         private Idea BuildIdea(IRecord record)
         {
             var userNode = record["u"].As<INode>();
-            var rel = record["r"].As<INode>();
+            var rel = record["r"].As<IRelationship>();
             var ideaNode = record["i"].As<INode>();
 
             var user = userNode.ToObject<User>();

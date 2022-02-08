@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MindKeeper.Shared.Models.ApiModels.Ideas
 {
@@ -7,7 +8,7 @@ namespace MindKeeper.Shared.Models.ApiModels.Ideas
         /// <summary>
         /// Filter by user
         /// </summary>
-        public int UserId { get; set; }
+        public Guid? UserId { get; set; }
 
         /// <summary>
         /// Filter by ideas whose name starts with this parameter.
@@ -17,11 +18,11 @@ namespace MindKeeper.Shared.Models.ApiModels.Ideas
         /// <summary>
         /// Filter by parent idea.
         /// </summary>
-        public int ParentId { get; set; }
+        public Guid? ParentId { get; set; }
 
         /// <summary>
         /// Filter by selected idea's id.
         /// </summary>
-        public List<int> Ideas { get; set; }
+        public List<Guid> Ideas { get; set; }
     }
 }
