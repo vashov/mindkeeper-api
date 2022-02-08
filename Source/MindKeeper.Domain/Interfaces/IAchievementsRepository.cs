@@ -1,0 +1,14 @@
+﻿using MindKeeper.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MindKeeper.Domain.Interfaces
+{
+    public interface IAchievementsRepository
+    {
+        Task<List<Achievement>> GetAchievements(Guid? userId);
+    }
+}

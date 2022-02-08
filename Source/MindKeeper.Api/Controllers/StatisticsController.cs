@@ -50,8 +50,8 @@ namespace MindKeeper.Api.Controllers
             return response;
         }
 
-        [HttpGet("Achievements/User/{userId?}")]
-        public async Task<Response<AchievementsResult>> AchievementsByUser([FromRoute] Guid? userId)
+        [HttpGet("Achievements/User/")]
+        public async Task<Response<AchievementsResult>> AchievementsByUser([FromQuery] Guid? userId = null)
         {
             var id = userId ?? User.GetUserId();
             
@@ -68,8 +68,8 @@ namespace MindKeeper.Api.Controllers
             return response;
         }
 
-        [HttpGet("Stats/User/{userId?}")]
-        public async Task<Response<StatsUserResult>> StatsByUser([FromRoute] Guid? userId)
+        [HttpGet("Stats/User/")]
+        public async Task<Response<StatsUserResult>> StatsByUser([FromQuery] Guid? userId = null)
         {
             var id = userId ?? User.GetUserId();
             StatsUser stats = await _statisticsService.GetUserStats(id);

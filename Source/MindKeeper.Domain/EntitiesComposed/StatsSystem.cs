@@ -2,7 +2,7 @@
 {
     public class StatsSystem
     {
-        public int TotalUsersCount { get; set; }
-        public int TotalIdeasCount { get; set; }
+        public long TotalUsersCount { get; set; }
+        public long TotalIdeasCount { get; set; }
     }
 }

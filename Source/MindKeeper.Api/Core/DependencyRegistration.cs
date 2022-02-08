@@ -20,6 +20,8 @@ namespace MindKeeper.Api.Core
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IIdeaRepository, IdeaRepository>();
+            services.AddScoped<IStatisticsRepository, StatisticsRepository>();
+            services.AddScoped<IAchievementsRepository, AchievementsRepository>();
         }
     }
 }
