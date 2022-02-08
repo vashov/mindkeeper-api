@@ -15,5 +15,6 @@ namespace MindKeeper.Api.Services.Ideas
         public Task DeleteLink(IdeaLinkDeleteModel model);
         Task AddToFavorites(Guid userId, Guid ideaId);
         Task DeleteFromFavorites(Guid userId, Guid ideaId);
+        Task<List<Idea>> GetRecommendedIdeas(Guid userId);
     }
 }

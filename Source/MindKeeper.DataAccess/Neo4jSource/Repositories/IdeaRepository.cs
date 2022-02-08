@@ -335,6 +335,11 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             await session.RunAsync(query, parameters);
         }
 
+        public Task<List<Idea>> GetRecommendedIdeas(Guid userId)
+        {
+            throw new NotImplementedException("GetRecommendedIdeas");
+        }
+
         private async Task<Idea> CreateIdea(IAsyncTransaction transaction, IdeaCreateModel model)
         {
             var createdAt = DateTimeOffset.UtcNow;

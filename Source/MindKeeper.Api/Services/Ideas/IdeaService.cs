@@ -82,6 +82,12 @@ namespace MindKeeper.Api.Services.Ideas
             await _ideaRepository.DeleteFromFavorites(userId, ideaId);
         }
 
+        public async Task<List<Idea>> GetRecommendedIdeas(Guid userId)
+        {
+            List<Idea> ideas = await _ideaRepository.GetRecommendedIdeas(userId);
+            return ideas;
+        }
+
         private async Task ValidateIdeaLinkModel(IIdeaLinkModel model)
         {
             if (model.IdeaId == default)

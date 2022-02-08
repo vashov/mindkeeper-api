@@ -115,5 +115,17 @@ namespace MindKeeper.Api.Controllers
 
             return new Response();
         }
+
+        [HttpGet("Recommendations")]
+        public async Task<Response> GetRecommendedIdeas()
+        {
+            var userId = User.GetUserId();
+
+            List<Domain.Entities.Idea> ideas = await _ideaService.GetRecommendedIdeas(userId);
+
+            throw new NotImplementedException();
+
+            return new Response();
+        }
     }
 }
