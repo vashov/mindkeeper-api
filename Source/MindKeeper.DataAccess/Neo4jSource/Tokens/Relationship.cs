@@ -14,20 +14,16 @@
         // Idea
         public const string COPY_OF = nameof(COPY_OF);
         public const string PARENT_FOR = nameof(PARENT_FOR);
-        public const string RELATEST_TO = nameof(RELATEST_TO);
         public const string DEPENDS_ON = nameof(DEPENDS_ON);
+        public const string RELATED_TO_IDEA = nameof(RELATED_TO_IDEA);
+        public const string RELATED_TO_COUNTRY = nameof(RELATED_TO_COUNTRY);
+        public const string RELATED_TO_SUBDOMAIN = nameof(RELATED_TO_SUBDOMAIN);
 
         // IdeaUpdate
         public const string UPDATE_OF = nameof(UPDATE_OF);
         public const string UPDATED = nameof(UPDATED);
 
-        // Country
-        public const string COUNTRY_OF = nameof(COUNTRY_OF);
-
         // Domain
         public const string CONTAINS_SUBDOMAIN = nameof(CONTAINS_SUBDOMAIN);
-
-        // Subdomain
-        public const string CONTAINS_IDEA = nameof(CONTAINS_IDEA);
     }
 }

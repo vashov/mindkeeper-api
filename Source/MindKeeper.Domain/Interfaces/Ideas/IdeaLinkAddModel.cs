@@ -2,7 +2,7 @@
 
 namespace MindKeeper.Domain.Interfaces.Ideas
 {
-    public struct IdeaLinkAddModel
+    public struct IdeaLinkAddModel : IIdeaLinkModel
     {
         public Guid IdeaId { get; set; }
         public Guid UserId { get; set; }

@@ -31,16 +31,6 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             return idea;
         }
 
-        public Task<bool> CreateLink(Guid parentId, Guid childId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteLink(Guid parentId, Guid childId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Idea> Get(Guid id)
         {
             using var session = _client.AsyncSession();
@@ -76,6 +66,238 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             var results = await cursor.ToListAsync<Idea>(BuildIdea);
 
             return results;
+        }
+
+        public async Task<bool> CreateLink(IdeaLinkAddModel model)
+        {
+            using var session = _client.AsyncSession();
+            bool result = await session.WriteTransactionAsync<bool>(async t =>
+            {
+                var connectedAt = DateTimeOffset.UtcNow;
+                var connectedBy = model.UserId.ToString();
+                var ideaId = model.IdeaId.ToString();
+
+                if (model.ParentIdea.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$ParentId}}), (ic:{Label.Idea} {{Id:$IdeaId}})
+                        CREATE (ip)-[:{Relationship.PARENT_FOR} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(ic);
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        ConnectedBy = connectedBy,
+                        ConnectedAt = connectedAt,
+                        ParentId = model.ParentIdea.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.ChildIdea.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}}), (ic:{Label.Idea} {{Id:$ChildId}})
+                        CREATE (ip)-[:{Relationship.PARENT_FOR} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(ic);
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        ConnectedBy = connectedBy,
+                        ConnectedAt = connectedAt,
+                        ChildId = model.ChildIdea.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.RelatesToIdea.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}}), (ic:{Label.Idea} {{Id:$RelatedId}})
+                        CREATE (ip)-[:{Relationship.RELATED_TO_IDEA} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(ic);
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        ConnectedBy = connectedBy,
+                        ConnectedAt = connectedAt,
+                        RelatedId = model.RelatesToIdea.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.DependsOnIdea.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}}), (ic:{Label.Idea} {{Id:$DependsOnId}})
+                        CREATE (ip)-[:{Relationship.DEPENDS_ON} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(ic);
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        ConnectedBy = connectedBy,
+                        ConnectedAt = connectedAt,
+                        DependsOnId = model.DependsOnIdea.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.Country.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}}), (ic:{Label.Country} {{Id:$CountryId}})
+                        CREATE (ip)-[:{Relationship.RELATED_TO_COUNTRY} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(ic);
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        ConnectedBy = connectedBy,
+                        ConnectedAt = connectedAt,
+                        CountryId = model.Country.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.Subdomain.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}}), (ic:{Label.Subdomain} {{Id:$SubdomainId}})
+                        CREATE (ip)-[:{Relationship.RELATED_TO_SUBDOMAIN} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(ic);
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        ConnectedBy = connectedBy,
+                        ConnectedAt = connectedAt,
+                        SubdomainId = model.Subdomain.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                return true;
+            });
+
+            return result;
+        }
+
+        public async Task<bool> DeleteLink(IdeaLinkDeleteModel model)
+        {
+            using var session = _client.AsyncSession();
+            bool result = await session.WriteTransactionAsync<bool>(async t =>
+            {
+                var ideaId = model.IdeaId.ToString();
+
+                if (model.ParentIdea.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$ParentId}})-[r:{Relationship.PARENT_FOR}]->(ic:{Label.Idea} {{Id:$IdeaId}})
+                        DELETE r;
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        ParentId = model.ParentIdea.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.ChildIdea.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}})-[r:{Relationship.PARENT_FOR}]->(ic:{Label.Idea} {{Id:$ChildId}})
+                        DELETE r;
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        ChildId = model.ChildIdea.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.RelatesToIdea.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}})-[r:{Relationship.RELATED_TO_IDEA}]->(ic:{Label.Idea} {{Id:$RelatedId}})
+                        DELETE r;
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        RelatedId = model.RelatesToIdea.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.DependsOnIdea.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}})-[r:{Relationship.DEPENDS_ON}]->(ic:{Label.Idea} {{Id:$DependsOnId}})
+                        DELETE r;
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        DependsOnId = model.DependsOnIdea.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.Country.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}})-[r:{Relationship.RELATED_TO_COUNTRY}]->(ic:{Label.Country} {{Id:$CountryId}})
+                        DELETE r;
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        CountryId = model.Country.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                if (model.Subdomain.HasValue)
+                {
+                    string query = $@"
+                        MATCH (ip:{Label.Idea} {{Id:$IdeaId}})-[r:{Relationship.RELATED_TO_SUBDOMAIN}]->(ic:{Label.Subdomain} {{Id:$SubdomainId}})
+                        DELETE r;
+                    ";
+
+                    var parameters = new
+                    {
+                        IdeaId = ideaId,
+                        SubdomainId = model.Subdomain.Value.ToString()
+                    };
+
+                    await t.RunAsync(query, parameters);
+                }
+
+                return true;
+            });
+
+            return result;
         }
 
         private async Task<Idea> CreateIdea(IAsyncTransaction transaction, IdeaCreateModel model)
@@ -131,7 +353,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             {
                 string createRelateWithCountry = $@"
                         MATCH (p:{Label.Country} {{Id: $CountryId}}), (i:{Label.Idea} {{Id: $IdeaId}})
-                        CREATE (p)-[r:{Relationship.COUNTRY_OF} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(i)
+                        CREATE (i)-[r:{Relationship.RELATED_TO_COUNTRY} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(p)
                         ;
                     ";
 
@@ -150,7 +372,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             {
                 string createRelateWithSubdomain = $@"
                         MATCH (p:{Label.Subdomain} {{Id: $SubdomainId}}), (i:{Label.Idea} {{Id: $IdeaId}})
-                        CREATE (p)-[r:{Relationship.CONTAINS_IDEA} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(i)
+                        CREATE (i)-[r:{Relationship.RELATED_TO_SUBDOMAIN} {{ConnectedAt: $ConnectedAt, ConnectedBy: $ConnectedBy}}]->(p)
                         ;
                     ";
 

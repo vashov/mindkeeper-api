@@ -56,27 +56,52 @@ namespace MindKeeper.Api.Services.Ideas
 
         public async Task CreateLink(IdeaLinkAddModel model)
         {
-            throw new NotImplementedException();
+            await ValidateIdeaLinkModel(model);
 
-            //await ValidateIdeasAsFutureChildAndParent(parentId, childId);
-
-            //var created = await _ideaRepository.CreateLink(parentId, childId);
-            //if (!created)
-            //    throw new ApiException(
-            //        $"Connection of idea (parent) {parentId} with idea (child) {childId} wasn't created.");
+            await _ideaRepository.CreateLink(model);
         }
 
         public async Task DeleteLink(IdeaLinkDeleteModel model)
         {
-            throw new NotImplementedException();
+            await ValidateIdeaLinkModel(model);
 
-            //await ValidateIdeasAsFutureChildAndParent(parentId, childId);
+            await _ideaRepository.DeleteLink(model);
+        }
 
-            //var deleted = await _ideaRepository.DeleteLink(parentId, childId);
+        private async Task ValidateIdeaLinkModel(IIdeaLinkModel model)
+        {
+            if (model.IdeaId == default)
+                throw new AppValidationException("Invalid idea Id.");
+            if (model.UserId == default)
+                throw new AppValidationException("Invalid user Id.");
 
-            //if (!deleted)
-            //    throw new ApiException(
-            //        $"Connection of idea (parent) {parentId} with idea (child) {childId} wasn't deleted.");
+            if (model.ParentIdea == default
+                && model.ChildIdea == default
+                && model.RelatesToIdea == default
+                && model.DependsOnIdea == default
+                && model.Country == default
+                && model.Subdomain == default)
+                throw new AppValidationException("Not enough data for operation.");
+
+            if (model.IdeaId == model.ParentIdea
+                || model.IdeaId == model.ChildIdea
+                || model.IdeaId == model.RelatesToIdea
+                || model.IdeaId == model.DependsOnIdea)
+                throw new AppValidationException("Self-referencing is not allowed for this type of relationship.");
+
+            Guid[] ideas = new Guid?[]
+            {
+                model.IdeaId,
+                model.ParentIdea,
+                model.ChildIdea,
+                model.RelatesToIdea,
+                model.DependsOnIdea
+            }
+            .Where(i => i.HasValue)
+            .Select(i => i.Value)
+            .ToArray();
+
+            await ValidateIdeasExist(ideas);
         }
 
         private static void ValidateNameAndDescription(string name, string description)

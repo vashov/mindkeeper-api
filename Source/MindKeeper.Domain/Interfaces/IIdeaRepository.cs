@@ -11,7 +11,7 @@ namespace MindKeeper.Domain.Interfaces
         public Task<Idea> Get(Guid id);
         public Task<List<Idea>> GetAll(IdeaGetAllModel filter);
         public Task<Idea> Create(IdeaCreateModel model);
-        public Task<bool> CreateLink(Guid parentId, Guid childId);
-        public Task<bool> DeleteLink(Guid parentId, Guid childId);
+        public Task<bool> CreateLink(IdeaLinkAddModel model);
+        public Task<bool> DeleteLink(IdeaLinkDeleteModel model);
     }
 }
