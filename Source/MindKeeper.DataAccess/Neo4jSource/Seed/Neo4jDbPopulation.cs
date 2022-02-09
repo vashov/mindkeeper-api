@@ -68,7 +68,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
             if (await IsAnyNodeExistsWithLabel(Label.Country))
                 return;
 
-            using var fileReader = File.OpenRead(GetPathToFile(@".\SeedData\countries.json"));
+            using var fileReader = File.OpenRead(GetPathToFile("countries.json"));
 
             var countries = await JsonSerializer
                 .DeserializeAsync<List<CountryModel>>(fileReader, _jsonSerializerOptions);
@@ -96,7 +96,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
             if (await IsAnyNodeExistsWithLabel(Label.Domain))
                 return;
 
-            using var fileReader = File.OpenRead(GetPathToFile(@".\SeedData\scientific_domains.json"));
+            using var fileReader = File.OpenRead(GetPathToFile("scientific_domains.json"));
 
             var domains = await JsonSerializer
                 .DeserializeAsync<List<ScientificDomainModel>>(fileReader, _jsonSerializerOptions);
@@ -142,7 +142,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
         {
             List<AchievementModel> achievements;
 
-            using var fileReader = File.OpenRead(GetPathToFile(@".\SeedData\achievements.json"));
+            using var fileReader = File.OpenRead(GetPathToFile("achievements.json"));
             {
                 achievements = await JsonSerializer
                     .DeserializeAsync<List<AchievementModel>>(fileReader, _jsonSerializerOptions);
@@ -168,10 +168,10 @@ namespace MindKeeper.DataAccess.Neo4jSource.Seed
 
         }
 
-        private string GetPathToFile(string path)
+        private string GetPathToFile(string filename)
         {
             string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string combinedPath = System.IO.Path.Combine(currentDirectory, path);
+            string combinedPath = System.IO.Path.Combine(currentDirectory, "SeedData", filename);
             string filePath = Path.GetFullPath(combinedPath);
             return filePath;
         }
