@@ -46,11 +46,18 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             };
 
             var cursor = await session.RunAsync(query, parameters);
-
             var results = await cursor.ToListAsync<Idea>(BuildIdea);
 
-            return results.FirstOrDefault();
+            var idea = results.FirstOrDefault();
+            if (idea == null)
+                return null;
+
+            await FillNodes(session, idea);
+            
+            return idea;
         }
+
+        
 
         public async Task<List<Idea>> GetAll(IdeaGetAllModel model)
         {
@@ -404,6 +411,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 };
 
                 cursor = await transaction.RunAsync(createRelateWithIdea, parentParameters);
+                idea.Parents.Add(model.ParentIdeaId.Value);
             }
 
             if (model.CountryId.HasValue)
@@ -423,6 +431,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 };
 
                 cursor = await transaction.RunAsync(createRelateWithCountry, parentParameters);
+                idea.Countries.Add(model.CountryId.Value);
             }
 
             if (model.SubdomainId.HasValue)
@@ -442,6 +451,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 };
 
                 cursor = await transaction.RunAsync(createRelateWithSubdomain, parentParameters);
+                idea.Subdomains.Add(model.SubdomainId.Value);
             }
 
             return idea;
@@ -461,6 +471,81 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             idea.CreatedAt = relationship.CreatedAt;
 
             return idea;
+        }
+
+        private async Task FillNodes(IAsyncSession session, Idea idea)
+        {
+            static Guid GetGuid(IRecord r) => Guid.Parse((string)r["p.Id"]);
+
+            var parameters = new { Id = idea.Id.ToString() };
+
+            string queryParents = $@"
+                    MATCH (p:{Label.Idea})-[r:{Relationship.PARENT_FOR}]->(i:{Label.Idea} {{Id:$Id}})
+                    RETURN p.Id;
+                ";
+
+            var cursor = await session.RunAsync(queryParents, parameters);
+            var parents = await cursor.ToListAsync<Guid>(GetGuid);
+
+            string queryChildrens = $@"
+                    MATCH (p:{Label.Idea})<-[r:{Relationship.PARENT_FOR}]-(i:{Label.Idea} {{Id:$Id}})
+                    RETURN p.Id;
+                ";
+
+            parameters = new { Id = idea.Id.ToString() };
+
+            cursor = await session.RunAsync(queryChildrens, parameters);
+            var childrens = await cursor.ToListAsync<Guid>(GetGuid);
+
+            string queryDependsOn = $@"
+                    MATCH (p:{Label.Idea})<-[r:{Relationship.DEPENDS_ON}]-(i:{Label.Idea} {{Id:$Id}})
+                    RETURN p.Id;
+                ";
+
+            cursor = await session.RunAsync(queryDependsOn, parameters);
+            var dependsOn = await cursor.ToListAsync<Guid>(GetGuid);
+
+            string queryReqiredFor = $@"
+                    MATCH (p:{Label.Idea})-[r:{Relationship.DEPENDS_ON}]->(i:{Label.Idea} {{Id:$Id}})
+                    RETURN p.Id;
+                ";
+
+            cursor = await session.RunAsync(queryReqiredFor, parameters);
+            var requiredFor = await cursor.ToListAsync<Guid>(GetGuid);
+
+            string queryRelatesTo = $@"
+                    MATCH (p:{Label.Idea})-[r:{Relationship.RELATED_TO_IDEA}]-(i:{Label.Idea} {{Id:$Id}})
+                    RETURN p.Id;
+                ";
+
+            cursor = await session.RunAsync(queryRelatesTo, parameters);
+            var relatesTo = await cursor.ToListAsync<Guid>(GetGuid);
+
+            string queryCountry = $@"
+                    MATCH (p:{Label.Country})<-[r:{Relationship.RELATED_TO_COUNTRY}]-(i:{Label.Idea} {{Id:$Id}})
+                    RETURN p.Id;
+                ";
+
+            cursor = await session.RunAsync(queryCountry, parameters);
+            var countries = await cursor.ToListAsync<Guid>(GetGuid);
+
+            string querySubdomains = $@"
+                    MATCH (p:{Label.Subdomain})<-[r:{Relationship.RELATED_TO_SUBDOMAIN}]-(i:{Label.Idea} {{Id:$Id}})
+                    RETURN p.Id;
+                ";
+
+            cursor = await session.RunAsync(queryCountry, parameters);
+            var subdomains = await cursor.ToListAsync<Guid>(GetGuid);
+
+            idea.Parents.AddRange(parents);
+            idea.Children.AddRange(childrens);
+            idea.RelatesTo.AddRange(relatesTo);
+            idea.DependsOn.AddRange(dependsOn);
+            idea.RequiredFor.AddRange(requiredFor);
+
+            idea.Subdomains.AddRange(subdomains);
+
+            idea.Countries.AddRange(countries);
         }
     }
 }
