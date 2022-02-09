@@ -13,8 +13,11 @@ using MindKeeper.Api.Core;
 using MindKeeper.Api.Core.Auth;
 using MindKeeper.Api.Core.Middlewares;
 using MindKeeper.Api.Core.OpenApi;
-using MindKeeper.Api.Data.Migrations;
+using MindKeeper.DataAccess.Neo4jSource;
+using MindKeeper.DataAccess.Neo4jSource.Seed;
+using MindKeeper.DataAccess.PostgreSource.Seed;
 using MindKeeper.Shared.Wrappers;
+using Neo4j.Driver;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -40,10 +43,15 @@ namespace MindKeeper.Api
         {
             services.AddTransient<IDbConnection>((sp) => new NpgsqlConnection(_dbConnectionString));
 
+            services.AddSingleton<IDriver>(sp => GraphDatabase.Driver(Neo4jSettings.Uri,
+                    AuthTokens.Basic(Neo4jSettings.Username, Neo4jSettings.Password)));
+
             services.AddRepositories();
             services.AddBusinessLogicServices();
 
             services.AddTransient<DbMigration>();
+            services.AddTransient<Neo4jDbConstraints>();
+            services.AddTransient<Neo4jDbPopulation>();
 
             services.AddAutoMapper(typeof(MappingProfile));
 
@@ -118,12 +126,14 @@ namespace MindKeeper.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider services)
         {
-            InitDatabase(services);
+            //InitDatabase(services);
 
             //if (env.IsDevelopment())
             //{
             //    app.UseDeveloperExceptionPage();
             //}
+
+            InitNeo4jDatabase(services);
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MindKeeper.Api v1"));
@@ -147,6 +157,15 @@ namespace MindKeeper.Api
         {
             var dbMigration = (DbMigration)services.GetService(typeof(DbMigration));
             dbMigration.InitDatabase().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        private static void InitNeo4jDatabase(IServiceProvider services)
+        {
+            var dbConstraints = (Neo4jDbConstraints)services.GetService(typeof(Neo4jDbConstraints));
+            dbConstraints.Init().ConfigureAwait(false).GetAwaiter().GetResult();
+
+            var dbPopulation = (Neo4jDbPopulation)services.GetService(typeof(Neo4jDbPopulation));
+            dbPopulation.Init().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 }

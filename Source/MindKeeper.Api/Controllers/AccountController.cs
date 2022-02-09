@@ -28,7 +28,7 @@ namespace MindKeeper.Api.Controllers
         [AllowAnonymous]
         public async Task<Response> Registration([FromBody] RegistrationRequest request)
         {
-            var result = await _userService.CreateUser(request.Mail, request.Password);
+            var result = await _userService.CreateUser(request.Name, request.Password);
 
             return new Response();
         }
@@ -37,7 +37,7 @@ namespace MindKeeper.Api.Controllers
         [AllowAnonymous]
         public async Task<Response<TokenResult>> Token([FromBody] TokenRequest request)
         {
-            var result = await _userService.CreateAccessToken(request.Username, request.Password);
+            var result = await _userService.CreateAccessToken(request.Name, request.Password);
 
             var response = new TokenResult
             {

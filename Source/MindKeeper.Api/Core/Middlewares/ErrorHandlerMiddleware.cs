@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using MindKeeper.Shared.Wrappers;
 using System;
 using System.Net;
@@ -11,10 +12,14 @@ namespace MindKeeper.Api.Core.Middlewares
     public class ErrorHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ErrorHandlerMiddleware> _logger;
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+        public ErrorHandlerMiddleware(
+            RequestDelegate next,
+            ILogger<ErrorHandlerMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -47,6 +52,8 @@ namespace MindKeeper.Api.Core.Middlewares
                         break;
                     default:
                         // unhandled error
+                        _logger.LogError($"Unhandled error: {error}");
+
                         var statusCode = (int)HttpStatusCode.InternalServerError;
                         response.StatusCode = statusCode;
                         responseModel.Message = "Unknown error on WebApi";
