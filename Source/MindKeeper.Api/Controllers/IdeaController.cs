@@ -117,15 +117,19 @@ namespace MindKeeper.Api.Controllers
         }
 
         [HttpGet("Recommendations")]
-        public async Task<Response> GetRecommendedIdeas()
+        public async Task<Response<IdeasRecommendationsResult>> GetRecommendedIdeas()
         {
             var userId = User.GetUserId();
 
             List<Domain.Entities.Idea> ideas = await _ideaService.GetRecommendedIdeas(userId);
 
-            throw new NotImplementedException();
+            var ideasDtos = _mapper.Map<List<IdeasRecommendationsResult.IdeaRecommendation>>(ideas);
+            var response = new IdeasRecommendationsResult()
+            {
+                Ideas = ideasDtos
+            };
 
-            return new Response();
+            return new Response<IdeasRecommendationsResult>(response);
         }
     }
 }

@@ -15,6 +15,9 @@ namespace MindKeeper.Api.Core
             CreateMap<MindKeeper.Domain.Entities.Idea,
                 Shared.Models.ApiModels.Ideas.IdeasGetAllResult.Idea>();
 
+            CreateMap<MindKeeper.Domain.Entities.Idea,
+                Shared.Models.ApiModels.Ideas.IdeasRecommendationsResult.IdeaRecommendation>();
+
             CreateMap<Shared.Models.ApiModels.Ideas.IdeasGetAllRequest,
                 MindKeeper.Domain.Interfaces.Ideas.IdeaGetAllModel>();
 

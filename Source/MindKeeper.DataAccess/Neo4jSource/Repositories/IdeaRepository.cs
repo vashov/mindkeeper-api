@@ -311,7 +311,8 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             var parameters = new
             {
                 UserId = userId.ToString(),
-                IdeaId = ideaId.ToString()
+                IdeaId = ideaId.ToString(),
+                CreatedAt = DateTimeOffset.UtcNow
             };
 
             using var session = _client.AsyncSession();
@@ -335,9 +336,25 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             await session.RunAsync(query, parameters);
         }
 
-        public Task<List<Idea>> GetRecommendedIdeas(Guid userId)
+        public async Task<List<Idea>> GetRecommendedIdeas(Guid userId)
         {
-            throw new NotImplementedException("GetRecommendedIdeas");
+            string query =
+                $"MATCH (user:{Label.User} {{Id: $UserId}})-[:{Relationship.ADDED_TO_FAVORITES}]->(idea:{Label.Idea})" +
+                $"<-[:{Relationship.ADDED_TO_FAVORITES}]-(anotherUser:{Label.User})" +
+                $"-[:{Relationship.ADDED_TO_FAVORITES}]->(i:{Label.Idea})," +
+                $"(u:{Label.User})-[r:{Relationship.CREATED_IDEA}]->(i)" +
+                $" WHERE idea <> i AND user <> u" +
+                $" RETURN u, r, i;";
+
+            var parameters = new
+            {
+                UserId = userId.ToString()
+            };
+            using var session = _client.AsyncSession();
+            var cursor = await session.RunAsync(query, parameters);
+
+            var results = await cursor.ToListAsync<Idea>(BuildIdea);
+            return results;
         }
 
         private async Task<Idea> CreateIdea(IAsyncTransaction transaction, IdeaCreateModel model)
