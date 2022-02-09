@@ -30,7 +30,7 @@ namespace MindKeeper.Api
 {
     public class Startup
     {
-        private readonly string _dbConnectionString = SqlConnectionStringBuilder.Build();
+        //private readonly string _dbConnectionString = SqlConnectionStringBuilder.Build();
 
         public Startup(IConfiguration configuration)
         {
@@ -41,7 +41,7 @@ namespace MindKeeper.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IDbConnection>((sp) => new NpgsqlConnection(_dbConnectionString));
+            //services.AddTransient<IDbConnection>((sp) => new NpgsqlConnection(_dbConnectionString));
 
             services.AddSingleton<IDriver>(sp => GraphDatabase.Driver(Neo4jSettings.Uri,
                     AuthTokens.Basic(Neo4jSettings.Username, Neo4jSettings.Password)));
