@@ -57,8 +57,6 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             return idea;
         }
 
-        
-
         public async Task<List<Idea>> GetAll(IdeaGetAllModel model)
         {
             using var session = _client.AsyncSession();
@@ -71,6 +69,14 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
             var cursor = await session.RunAsync(query);
 
             var results = await cursor.ToListAsync<Idea>(BuildIdea);
+            
+            // TODO: Use filters
+
+            if (model.HasFilter)
+            {
+                foreach (var idea in results)
+                    await FillNodes(session, idea);
+            }
 
             return results;
         }

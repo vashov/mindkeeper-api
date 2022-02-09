@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MindKeeper.Domain.Interfaces.Ideas
 {
@@ -12,5 +13,19 @@ namespace MindKeeper.Domain.Interfaces.Ideas
         public Guid? SubdomainId { get; set; }
         public Guid? ParentIdeaId { get; set; }
         public IReadOnlyList<Guid> Ideas { get; set; }
+
+        public bool HasFilter
+        {
+            get
+            {
+                return UserId.HasValue
+                    || !string.IsNullOrWhiteSpace(Name)
+                    || CountryId.HasValue
+                    || DomainId.HasValue
+                    || SubdomainId.HasValue
+                    || ParentIdeaId.HasValue
+                    || (Ideas != null && Ideas.Any());
+            }
+        }
     }
 }
