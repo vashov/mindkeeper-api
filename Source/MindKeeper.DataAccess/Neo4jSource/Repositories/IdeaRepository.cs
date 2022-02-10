@@ -356,7 +356,7 @@ namespace MindKeeper.DataAccess.Neo4jSource.Repositories
                 $"<-[:{Relationship.ADDED_TO_FAVORITES}]-(anotherUser:{Label.User})" +
                 $"-[:{Relationship.ADDED_TO_FAVORITES}]->(i:{Label.Idea})," +
                 $"(u:{Label.User})-[r:{Relationship.CREATED_IDEA}]->(i)" +
-                $" WHERE idea <> i AND user <> u" +
+                $" WHERE NOT (user)-[]->(i)" +
                 $" RETURN u, r, i;";
 
             var parameters = new
