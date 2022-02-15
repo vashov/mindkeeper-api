@@ -35,12 +35,12 @@ namespace MindKeeper.Api.Controllers
 
         [HttpGet("Achievements")]
         [ResponseCache(Duration = 5)]
-        public async Task<Response<AchievementsResult>> Achievements()
+        public async Task<AppResponse<AchievementsResult>> Achievements()
         {
             var achievements = await _statisticsService.GetAchievements();
             var result = _mapper.Map<List<AchievementsResult.Achivement>>(achievements);
 
-            var response = new Response<AchievementsResult>(
+            var response = AppResponse<AchievementsResult>.Ok(
                 new AchievementsResult
                 {
                     Achivements = result
@@ -51,14 +51,14 @@ namespace MindKeeper.Api.Controllers
         }
 
         [HttpGet("Achievements/User/")]
-        public async Task<Response<AchievementsResult>> AchievementsByUser([FromQuery] Guid? userId = null)
+        public async Task<AppResponse<AchievementsResult>> AchievementsByUser([FromQuery] Guid? userId = null)
         {
             var id = userId ?? User.GetUserId();
             
             var achievements = await _statisticsService.GetAchievements(id);
             var result = _mapper.Map<List<AchievementsResult.Achivement>>(achievements);
 
-            var response = new Response<AchievementsResult>(
+            var response = AppResponse<AchievementsResult>.Ok(
                 new AchievementsResult
                 {
                     Achivements = result
@@ -69,25 +69,25 @@ namespace MindKeeper.Api.Controllers
         }
 
         [HttpGet("Stats/User/")]
-        public async Task<Response<StatsUserResult>> StatsByUser([FromQuery] Guid? userId = null)
+        public async Task<AppResponse<StatsUserResult>> StatsByUser([FromQuery] Guid? userId = null)
         {
             var id = userId ?? User.GetUserId();
             StatsUser stats = await _statisticsService.GetUserStats(id);
 
             var result = _mapper.Map<StatsUserResult>(stats);
 
-            var response = new Response<StatsUserResult>(result);
+            var response = AppResponse<StatsUserResult>.Ok(result);
             return response;
         }
 
         [HttpGet("Stats/System")]
         [ResponseCache(Duration = 5)]
-        public async Task<Response<StatsSystemResult>> StatsBySystem()
+        public async Task<AppResponse<StatsSystemResult>> StatsBySystem()
         {
             StatsSystem stats = await _statisticsService.GetSystemStats();
             var result = _mapper.Map<StatsSystemResult>(stats);
 
-            var response = new Response<StatsSystemResult>(result);
+            var response = AppResponse<StatsSystemResult>.Ok(result);
             return response;
         }
     }
