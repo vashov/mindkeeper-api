@@ -60,7 +60,13 @@ namespace MindKeeper.Api.Core.Middlewares
                         responseModel.Status = statusCode;
                         break;
                 }
-                var result = JsonSerializer.Serialize(responseModel);
+
+                var jsonSerializerSettings = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+
+                var result = JsonSerializer.Serialize(responseModel, jsonSerializerSettings);
 
                 await response.WriteAsync(result);
             }
