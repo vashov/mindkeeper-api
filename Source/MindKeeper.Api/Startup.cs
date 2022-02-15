@@ -66,11 +66,9 @@ namespace MindKeeper.Api
                             {
                                 if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
                                 {
-                                    var response = new Response("Unauthorized")
-                                    {
-                                        Status = (int)HttpStatusCode.Unauthorized
-                                    };
-
+                                    var response = AppResponse.Error("Unauthorized");
+                                    response.Status = (int)HttpStatusCode.Unauthorized;
+                                    
                                     await context.Response.WriteAsJsonAsync(response);
                                 }
                             });
@@ -78,10 +76,8 @@ namespace MindKeeper.Api
                         },
                         OnForbidden = async context =>
                         {
-                            var response = new Response("Forbidden")
-                            {
-                                Status = (int)HttpStatusCode.Forbidden
-                            };
+                            var response = AppResponse.Error("Forbidden");
+                            response.Status = (int)HttpStatusCode.Forbidden;
 
                             await context.Response.WriteAsJsonAsync(response);
                         }
@@ -113,10 +109,9 @@ namespace MindKeeper.Api
                             .SelectMany(c => c.Errors)
                             .Where(c => !string.IsNullOrEmpty(c.ErrorMessage))
                             .Select(c => c.ErrorMessage);
-                        var response = new Response("One or more validation errors.")
-                        {
-                            Errors = errors.ToList(),
-                        };
+                        var response = AppResponse.Error("One or more validation errors.");
+                        response.Errors = errors.ToList();
+
                         return new BadRequestObjectResult(response);
                     };
                 });

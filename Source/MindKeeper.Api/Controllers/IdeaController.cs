@@ -34,16 +34,16 @@ namespace MindKeeper.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<Response<IdeaGetResult>> Get([FromRoute] Guid id)
+        public async Task<AppResponse<IdeaGetResult>> Get([FromRoute] Guid id)
         {
             var result = await _ideaService.Get(id);
 
             var response = _mapper.Map<IdeaGetResult>(result);
-            return new Response<IdeaGetResult>(response);
+            return AppResponse<IdeaGetResult>.Ok(response);
         }
 
         [HttpGet]
-        public async Task<Response<IdeasGetAllResult>> GetAll([FromQuery] IdeasGetAllRequest request)
+        public async Task<AppResponse<IdeasGetAllResult>> GetAll([FromQuery] IdeasGetAllRequest request)
         {
             var filter = _mapper.Map<IdeaGetAllModel>(request);
 
@@ -55,11 +55,11 @@ namespace MindKeeper.Api.Controllers
                 Ideas = ideaDtos 
             };
 
-            return new Response<IdeasGetAllResult>(response);
+            return AppResponse<IdeasGetAllResult>.Ok(response);
         }
 
         [HttpPost("[action]")]
-        public async Task<Response<IdeaCreateResult>> Create([FromBody] IdeaCreateRequest request)
+        public async Task<AppResponse<IdeaCreateResult>> Create([FromBody] IdeaCreateRequest request)
         {
             var model = _mapper.Map<IdeaCreateModel>(request);
             model.UserId = User.GetUserId();
@@ -71,53 +71,53 @@ namespace MindKeeper.Api.Controllers
                 Id = result.Id
             };
 
-            return new Response<IdeaCreateResult>(response);
+            return AppResponse<IdeaCreateResult>.Ok(response);
         }
 
         [HttpPost("Link/Add")]
-        public async Task<Response> AddLink([FromBody] IdeaLinkAddRequest request)
+        public async Task<AppResponse> AddLink([FromBody] IdeaLinkAddRequest request)
         {
             var model = _mapper.Map<IdeaLinkAddModel>(request);
             model.UserId = User.GetUserId();
 
             await _ideaService.CreateLink(model);
 
-            return new Response();
+            return AppResponse.Ok();
         }
 
         [HttpDelete("Link/Delete")]
-        public async Task<Response> DeleteLink([FromBody] IdeaLinkDeleteRequest request)
+        public async Task<AppResponse> DeleteLink([FromBody] IdeaLinkDeleteRequest request)
         {
             var model = _mapper.Map<IdeaLinkDeleteModel>(request);
             model.UserId = User.GetUserId();
 
             await _ideaService.DeleteLink(model);
 
-            return new Response();
+            return AppResponse.Ok();
         }
 
         [HttpPost("Favorites/Add/{ideaId}")]
-        public async Task<Response> AddToFavorites([FromRoute] Guid ideaId)
+        public async Task<AppResponse> AddToFavorites([FromRoute] Guid ideaId)
         {
             var userId = User.GetUserId();
 
             await _ideaService.AddToFavorites(userId, ideaId);
 
-            return new Response();
+            return AppResponse.Ok();
         }
 
         [HttpDelete("Favorites/Delete/{ideaId}")]
-        public async Task<Response> DeleteFromFavorites([FromRoute] Guid ideaId)
+        public async Task<AppResponse> DeleteFromFavorites([FromRoute] Guid ideaId)
         {
             var userId = User.GetUserId();
 
             await _ideaService.DeleteFromFavorites(userId, ideaId);
 
-            return new Response();
+            return AppResponse.Ok();
         }
 
         [HttpGet("Recommendations")]
-        public async Task<Response<IdeasRecommendationsResult>> GetRecommendedIdeas()
+        public async Task<AppResponse<IdeasRecommendationsResult>> GetRecommendedIdeas()
         {
             var userId = User.GetUserId();
 
@@ -129,7 +129,7 @@ namespace MindKeeper.Api.Controllers
                 Ideas = ideasDtos
             };
 
-            return new Response<IdeasRecommendationsResult>(response);
+            return AppResponse<IdeasRecommendationsResult>.Ok(response);
         }
     }
 }

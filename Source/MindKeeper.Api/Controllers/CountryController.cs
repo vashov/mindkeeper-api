@@ -29,7 +29,7 @@ namespace MindKeeper.Api.Controllers
         [HttpGet]
         [ResponseCache(Duration = 60 * 60 * 24)]
         [AllowAnonymous]
-        public async Task<Response<CountryGetAllResult>> GetAll()
+        public async Task<AppResponse<CountryGetAllResult>> GetAll()
         {
             var result = await _countryService.GetAll();
 
@@ -39,7 +39,7 @@ namespace MindKeeper.Api.Controllers
                 Countries = countriesDto
             };
 
-            return new Response<CountryGetAllResult>(response);
+            return AppResponse<CountryGetAllResult>.Ok(response);
         }
     }
 }

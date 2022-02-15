@@ -29,7 +29,7 @@ namespace MindKeeper.Api.Controllers
         [HttpGet]
         [ResponseCache(Duration = 60 * 60 * 24)]
         [AllowAnonymous]
-        public async Task<Response<DomainGetAllResult>> GetAll()
+        public async Task<AppResponse<DomainGetAllResult>> GetAll()
         {
             var result = await _domainService.GetAll();
 
@@ -39,7 +39,7 @@ namespace MindKeeper.Api.Controllers
                 Domains = domainsDto
             };
 
-            return new Response<DomainGetAllResult>(response);
+            return AppResponse<DomainGetAllResult>.Ok(response);
         }
     }
 }
