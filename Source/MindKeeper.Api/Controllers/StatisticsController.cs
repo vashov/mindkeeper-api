@@ -43,7 +43,7 @@ namespace MindKeeper.Api.Controllers
             var response = AppResponse<AchievementsResult>.Ok(
                 new AchievementsResult
                 {
-                    Achivements = result
+                    Achievements = result
                 }
             );
 
@@ -61,7 +61,7 @@ namespace MindKeeper.Api.Controllers
             var response = AppResponse<AchievementsResult>.Ok(
                 new AchievementsResult
                 {
-                    Achivements = result
+                    Achievements = result
                 }
             );
 
