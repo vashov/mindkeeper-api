@@ -13,6 +13,6 @@ namespace MindKeeper.Shared.Models.ApiModels.Statistics
             public bool IsSecret { get; set; }
         }
 
-        public List<Achivement> Achivements { get; set; }
+        public List<Achivement> Achievements { get; set; }
     }
 }
